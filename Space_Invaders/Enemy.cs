@@ -8,23 +8,26 @@ namespace Space_Invaders
     internal class Enemy
     {
         Texture2D enemyTex;
-        public Vector2 pos;
+        Vector2 pos;
         Rectangle enemyRec;
+        
 
-        public Enemy(Texture2D enemyTex)
+        public Enemy(Texture2D enemyTex, int x, int y)
         {
             this.enemyTex = enemyTex;
+            this.pos = new Vector2 (x, y);
             enemyRec = new Rectangle(0, 0, 100, 90);
         }
 
+
         public void Update()
         {
-            pos.Y += 1;
+           
         }
 
         public void Draw(SpriteBatch sb)
         {
-            sb.Draw(enemyTex, new Vector2(25, 25), enemyRec, Color.White);
+            sb.Draw(enemyTex, pos, enemyRec, Color.White);
         }
     }
 }

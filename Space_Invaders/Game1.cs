@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace Space_Invaders
 {
@@ -8,8 +9,9 @@ namespace Space_Invaders
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        Texture2D enemyTex;
 
-        Enemy enemy;
+        List<Enemy> enemy;
         
 
         public Game1()
@@ -22,8 +24,8 @@ namespace Space_Invaders
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            _graphics.PreferredBackBufferWidth = 500;
-            _graphics.PreferredBackBufferHeight = 800;
+            _graphics.PreferredBackBufferWidth = 700;
+            _graphics.PreferredBackBufferHeight = 950;
             _graphics.ApplyChanges();
 
             base.Initialize();
@@ -35,9 +37,22 @@ namespace Space_Invaders
 
             // TODO: use this.Content to load your game content here
 
-            Texture2D enemyTex = Content.Load<Texture2D>("alien02_sprites");
-            enemy = new Enemy(enemyTex);
-           
+            enemyTex = Content.Load<Texture2D>("alien02_sprites");
+
+            enemy = new List<Enemy>();
+            Vector2 startPos = new Vector2(65, 100);
+
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    int x = (int) startPos.X + j * 120;
+                    int y = (int) startPos.Y + i * 100;
+
+                    Enemy ene = new Enemy(enemyTex, x, y);
+                    enemy.Add(ene);
+                }
+            }
 
             //enemy = new Enemy(enemyTex);
         }
@@ -60,7 +75,12 @@ namespace Space_Invaders
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-            enemy.Draw(_spriteBatch);
+
+            for (int i = 0; i < enemy.Count; i++)
+            {
+                enemy[i].Draw(_spriteBatch);
+            }
+
             _spriteBatch.End();
 
             base.Draw(gameTime);
