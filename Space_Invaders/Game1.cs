@@ -9,10 +9,15 @@ namespace Space_Invaders
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
         Texture2D enemyTex;
 
         List<Enemy> enemy;
         
+
+        Player player;
+
+
 
         public Game1()
         {
@@ -34,6 +39,10 @@ namespace Space_Invaders
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            Texture2D playerTexture = Content.Load<Texture2D>("702307-200");
+            Vector2 startPos = new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height - 100);
+            player = new Player(playerTexture, startPos);
 
             // TODO: use this.Content to load your game content here
 
@@ -63,7 +72,14 @@ namespace Space_Invaders
                 Exit();
             
 
+            player.Update();
+
             // TODO: Add your update logic here
+            {
+                Exit();
+            }
+
+            player.Update(Window.ClientBounds.Width);
 
 
             base.Update(gameTime);
@@ -80,7 +96,7 @@ namespace Space_Invaders
             {
                 enemy[i].Draw(_spriteBatch);
             }
-
+            player.Draw(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);
