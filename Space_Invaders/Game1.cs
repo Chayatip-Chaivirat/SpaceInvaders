@@ -29,7 +29,7 @@ namespace Space_Invaders
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Texture2D playerTexture = Content.Load<Texture2D>("player");
+            Texture2D playerTexture = Content.Load<Texture2D>("702307-200");
             Vector2 startPos = new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height - 100);
             player = new Player(playerTexture, startPos);
 
@@ -44,6 +44,11 @@ namespace Space_Invaders
             player.Update();
 
             // TODO: Add your update logic here
+            {
+                Exit();
+            }
+
+            player.Update(Window.ClientBounds.Width);
 
             base.Update(gameTime);
         }

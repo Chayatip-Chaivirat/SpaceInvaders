@@ -14,8 +14,15 @@ namespace Space_Invaders
             this.pos1 = startPos;
         }
 
-        public void Update()
+        public void Update(int windowWidth)
         {
+            pos1.X = pos1.X + 2;
+            int stopX = windowWidth - playerTexture.Width;
+            if (pos1.X > stopX)
+                {
+                pos1.X = stopX;
+            }
+
 
         }
 
