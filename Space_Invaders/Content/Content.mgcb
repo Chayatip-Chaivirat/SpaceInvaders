@@ -15,8 +15,8 @@
 
 
 #begin alien02_sprites.png
-=======
-#begin 702307-200.png
+
+#begin Ship_01-1.png
 
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -30,9 +30,7 @@
 
 /build:alien02_sprites.png
 
-/build:702307-200.png
-
-#begin 702307-200.png
+#begin Ship_01-1.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -42,5 +40,4 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:702307-200.png
-
+/build:Ship_01-1.png

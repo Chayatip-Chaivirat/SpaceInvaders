@@ -40,16 +40,17 @@ namespace Space_Invaders
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Texture2D playerTexture = Content.Load<Texture2D>("702307-200");
-            Vector2 startPos = new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height - 100);
-            player = new Player(playerTexture, startPos);
+            Texture2D playerTexture = Content.Load<Texture2D>("Ship_01-1");
+            Vector2 playerPos = new Vector2(300, 800);
+            Vector2 startPos = new Vector2(65, 100);
+            player = new Player(playerTexture, playerPos);
 
             // TODO: use this.Content to load your game content here
 
             enemyTex = Content.Load<Texture2D>("alien02_sprites");
 
             enemy = new List<Enemy>();
-            Vector2 startPos = new Vector2(65, 100);
+
 
             for (int i = 0; i < 3; i++)
             {
@@ -63,7 +64,7 @@ namespace Space_Invaders
                 }
             }
 
-            //enemy = new Enemy(enemyTex);
+            
         }
 
         protected override void Update(GameTime gameTime)
@@ -72,11 +73,11 @@ namespace Space_Invaders
                 Exit();
             
 
-            player.Update();
+         
 
             // TODO: Add your update logic here
             {
-                Exit();
+                
             }
 
             player.Update(Window.ClientBounds.Width);
