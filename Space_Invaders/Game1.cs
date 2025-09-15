@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace Space_Invaders
 {
@@ -8,7 +9,14 @@ namespace Space_Invaders
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
+        Texture2D enemyTex;
+
+        List<Enemy> enemy;
+        
+
         Player player;
+
 
 
         public Game1()
@@ -21,6 +29,9 @@ namespace Space_Invaders
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            _graphics.PreferredBackBufferWidth = 700;
+            _graphics.PreferredBackBufferHeight = 950;
+            _graphics.ApplyChanges();
 
             base.Initialize();
         }
@@ -34,12 +45,32 @@ namespace Space_Invaders
             player = new Player(playerTexture, startPos);
 
             // TODO: use this.Content to load your game content here
+
+            enemyTex = Content.Load<Texture2D>("alien02_sprites");
+
+            enemy = new List<Enemy>();
+            Vector2 startPos = new Vector2(65, 100);
+
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    int x = (int) startPos.X + j * 120;
+                    int y = (int) startPos.Y + i * 100;
+
+                    Enemy ene = new Enemy(enemyTex, x, y);
+                    enemy.Add(ene);
+                }
+            }
+
+            //enemy = new Enemy(enemyTex);
         }
 
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            
 
             player.Update();
 
@@ -50,6 +81,7 @@ namespace Space_Invaders
 
             player.Update(Window.ClientBounds.Width);
 
+
             base.Update(gameTime);
         }
 
@@ -57,11 +89,15 @@ namespace Space_Invaders
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            // TODO: Add your drawing code here
             _spriteBatch.Begin();
+
+            for (int i = 0; i < enemy.Count; i++)
+            {
+                enemy[i].Draw(_spriteBatch);
+            }
             player.Draw(_spriteBatch);
             _spriteBatch.End();
-
-            // TODO: Add your drawing code here
 
             base.Draw(gameTime);
         }

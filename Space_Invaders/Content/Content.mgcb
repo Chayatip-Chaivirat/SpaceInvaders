@@ -13,7 +13,11 @@
 
 #---------------------------------- Content ---------------------------------#
 
+
+#begin alien02_sprites.png
+=======
 #begin 702307-200.png
+
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -23,6 +27,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
+
+/build:alien02_sprites.png
+
 /build:702307-200.png
 
 #begin 702307-200.png
