@@ -9,6 +9,9 @@ namespace Space_Invaders
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        Enemy enemy;
+        
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -19,6 +22,9 @@ namespace Space_Invaders
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            _graphics.PreferredBackBufferWidth = 500;
+            _graphics.PreferredBackBufferHeight = 800;
+            _graphics.ApplyChanges();
 
             base.Initialize();
         }
@@ -28,14 +34,22 @@ namespace Space_Invaders
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+
+            Texture2D enemyTex = Content.Load<Texture2D>("alien02_sprites");
+            enemy = new Enemy(enemyTex);
+           
+
+            //enemy = new Enemy(enemyTex);
         }
 
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            
 
             // TODO: Add your update logic here
+
 
             base.Update(gameTime);
         }
@@ -45,6 +59,9 @@ namespace Space_Invaders
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            _spriteBatch.Begin();
+            enemy.Draw(_spriteBatch);
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
