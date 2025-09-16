@@ -11,12 +11,13 @@ namespace Space_Invaders
         private SpriteBatch _spriteBatch;
 
         Texture2D enemyTex;
-
+        Texture2D bulletTex;
         List<Enemy> enemy;
         
 
         Player player;
 
+        Bullet bullet;
 
 
         public Game1()
@@ -42,7 +43,7 @@ namespace Space_Invaders
 
             Texture2D playerTexture = Content.Load<Texture2D>("Ship_01-1");
             Vector2 playerPos = new Vector2(300, 800);
-            Vector2 startPos = new Vector2(65, 100);
+            Vector2 enemyPos = new Vector2(65, 100);
             player = new Player(playerTexture, playerPos);
 
             // TODO: use this.Content to load your game content here
@@ -56,15 +57,17 @@ namespace Space_Invaders
             {
                 for (int j = 0; j < 5; j++)
                 {
-                    int x = (int) startPos.X + j * 120;
-                    int y = (int) startPos.Y + i * 100;
+                    int x = (int) enemyPos.X + j * 120;
+                    int y = (int) enemyPos.Y + i * 100;
 
                     Enemy ene = new Enemy(enemyTex, x, y);
                     enemy.Add(ene);
                 }
             }
 
-            
+            bulletTex = Content.Load<Texture2D>("bullet_1");
+            bullet = new Bullet(bulletTex, playerPos);
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -81,6 +84,7 @@ namespace Space_Invaders
             }
 
             player.Update(Window.ClientBounds.Width);
+            bullet.Update();
 
 
             base.Update(gameTime);
@@ -98,6 +102,7 @@ namespace Space_Invaders
                 enemy[i].Draw(_spriteBatch);
             }
             player.Draw(_spriteBatch);
+            bullet.Draw(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);
