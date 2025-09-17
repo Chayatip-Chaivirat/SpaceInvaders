@@ -12,11 +12,10 @@ namespace Space_Invaders
 
         Texture2D enemyTex;
         Texture2D bulletTex;
+        Enemy enemyClass;
         List<Enemy> enemy;
-        
-
         Player player;
-
+        public bool enemyIsAlive = true;
         Bullet bullet;
 
 
@@ -49,7 +48,7 @@ namespace Space_Invaders
             // TODO: use this.Content to load your game content here
 
             enemyTex = Content.Load<Texture2D>("alien02_sprites");
-
+            
             enemy = new List<Enemy>();
 
 
@@ -86,6 +85,13 @@ namespace Space_Invaders
             player.Update(Window.ClientBounds.Width);
             bullet.Update();
 
+            Rectangle enemyRec = Enemy.enemyRec;
+            Rectangle bulletRec = Bullet.bulletRec;
+            if (bulletRec.Intersects(enemyRec))
+            {
+                enemyIsAlive = false;
+            }
+
 
             base.Update(gameTime);
         }
@@ -99,7 +105,11 @@ namespace Space_Invaders
 
             for (int i = 0; i < enemy.Count; i++)
             {
-                enemy[i].Draw(_spriteBatch);
+                if (enemyIsAlive == true)
+                {
+                    enemy[i].Draw(_spriteBatch);
+                }
+                //enemy[i].Draw(_spriteBatch);
             }
             player.Draw(_spriteBatch);
             bullet.Draw(_spriteBatch);

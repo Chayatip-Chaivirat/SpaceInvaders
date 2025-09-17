@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -8,7 +9,8 @@ namespace Space_Invaders
     {
         Texture2D bulletTex;
         Vector2 bulletPos;
-        Rectangle bulletRec;
+        public static Rectangle bulletRec;
+          
 
         public Bullet(Texture2D bulletTex,Vector2 bulletPos)
         {
@@ -19,7 +21,7 @@ namespace Space_Invaders
 
         public void Update()
         {
-            bulletPos.Y -= 7;
+            bulletPos.Y -= 5;
         }
 
         public void Draw(SpriteBatch sb)

@@ -9,10 +9,9 @@ namespace Space_Invaders
     {
         Texture2D enemyTex;
         Vector2 pos;
-        Rectangle enemyRec;
-        
+        public static Rectangle enemyRec;
 
-        public Enemy(Texture2D enemyTex, int x, int y)
+        public Enemy(Texture2D enemyTex, int x, int y )
         {
             this.enemyTex = enemyTex;
             this.pos = new Vector2 (x, y);
