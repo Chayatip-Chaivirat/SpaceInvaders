@@ -43,11 +43,14 @@ namespace Space_Invaders
             Texture2D playerTexture = Content.Load<Texture2D>("Ship_01-1");
             Vector2 playerPos = new Vector2(300, 800);
             Vector2 enemyPos = new Vector2(65, 100);
+            enemyTex = Content.Load<Texture2D>("alien02_sprites");
             player = new Player(playerTexture, playerPos);
+            enemyClass = new Enemy(enemyTex, (int)enemyPos.X, (int)enemyPos.Y);
+            
 
             // TODO: use this.Content to load your game content here
 
-            enemyTex = Content.Load<Texture2D>("alien02_sprites");
+            
             
             enemyList = new List<Enemy>();
 
@@ -103,19 +106,32 @@ namespace Space_Invaders
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-            
-            enemyClass.Draw(_spriteBatch);
 
-            for (int i = 0; i < enemyList.Count; i++)
-            {
-                if (enemyIsAlive == true)
-                {
-                    enemyList[i].Draw(_spriteBatch);
-                }
-                //enemy[i].Draw(_spriteBatch);
-            }
-            player.Draw(_spriteBatch);
+            //enemyClass.Draw(_spriteBatch);
             bullet.Draw(_spriteBatch);
+
+            foreach (Enemy ene in enemyList)
+            {
+                ene.Draw(_spriteBatch);
+                if (enemyIsAlive == false)
+                {
+                    enemyList.Remove(ene);
+                    break;
+                }
+            }
+
+            //for (int i = 0; i < enemyList.Count; i++)
+            //{
+            //    enemyList[i].Draw(_spriteBatch);
+            //    if (enemyIsAlive == false)
+            //    {
+            //        enemyList.RemoveAt(i);
+            //    }
+            //}
+
+
+            player.Draw(_spriteBatch);
+            
             _spriteBatch.End();
 
             base.Draw(gameTime);
