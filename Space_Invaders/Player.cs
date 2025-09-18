@@ -2,6 +2,7 @@
 using System.Diagnostics.Eventing.Reader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Space_Invaders;
 
 
 internal class Player
@@ -30,11 +31,6 @@ internal class Player
         if (state.IsKeyDown(Keys.Right))
         {
             pos1.X += speed * 0.046f;
-        }
-        if (state.IsKeyDown(Keys.Space))
-        {
-            // Placeholder for shooting logic
-
         }
 
         int stopX = windowWidth - playerTexture.Width;
