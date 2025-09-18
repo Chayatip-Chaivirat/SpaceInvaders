@@ -113,12 +113,14 @@ namespace Space_Invaders
             foreach (Enemy ene in enemyList)
             {
                 ene.Draw(_spriteBatch);
-                if (enemyIsAlive == false)
-                {
-                    enemyList.Remove(ene);
-                    break;
-                }
             }
+            //if (enemyIsAlive == true)
+            //{
+            //    foreach (Enemy ene in enemyList)
+            //    {
+            //        ene.Draw(_spriteBatch);
+            //    }
+            //}
 
             //for (int i = 0; i < enemyList.Count; i++)
             //{
