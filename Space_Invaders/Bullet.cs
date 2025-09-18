@@ -22,6 +22,7 @@ namespace Space_Invaders
         public void Update()
         {
             bulletPos.Y -= 5;
+            //bulletPos.X = (int) playerPos.X;
         }
 
         public void Draw(SpriteBatch sb)

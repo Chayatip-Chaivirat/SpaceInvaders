@@ -31,6 +31,11 @@ internal class Player
         {
             pos1.X += speed * 0.046f;
         }
+        if (state.IsKeyDown(Keys.Space))
+        {
+            // Placeholder for shooting logic
+
+        }
 
         int stopX = windowWidth - playerTexture.Width;
         if (pos1.X < 0)

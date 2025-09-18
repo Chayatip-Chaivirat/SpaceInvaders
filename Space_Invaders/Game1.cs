@@ -17,6 +17,7 @@ namespace Space_Invaders
         Player player;
         public bool enemyIsAlive = true;
         Bullet bullet;
+        List<Rectangle> itemToRemove;
 
 
         public Game1()
@@ -53,6 +54,7 @@ namespace Space_Invaders
             
             
             enemyList = new List<Enemy>();
+            itemToRemove = new List<Rectangle>();
 
 
             for (int i = 0; i < 3; i++)
@@ -88,11 +90,13 @@ namespace Space_Invaders
             player.Update(Window.ClientBounds.Width);
             bullet.Update();
 
+
             Rectangle enemyRec = Enemy.enemyRec;
             Rectangle bulletRec = Bullet.bulletRec;
-            
+
             if (bulletRec.Intersects(enemyRec))
             {
+                itemToRemove.Add(enemyRec);
                 enemyIsAlive = false;
             }
 
@@ -110,10 +114,15 @@ namespace Space_Invaders
             //enemyClass.Draw(_spriteBatch);
             bullet.Draw(_spriteBatch);
 
-            foreach (Enemy ene in enemyList)
+
+            if (enemyIsAlive == true)
             {
-                ene.Draw(_spriteBatch);
+                for (int i = 0; i < enemyList.Count; i++)
+                {
+                    enemyList[i].Draw(_spriteBatch);
+                }
             }
+            
             //if (enemyIsAlive == true)
             //{
             //    foreach (Enemy ene in enemyList)
