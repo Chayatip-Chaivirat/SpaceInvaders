@@ -7,10 +7,13 @@ namespace Space_Invaders
 {
     public class Game1 : Game
     {
+        private KeyboardState previousState;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
         Texture2D enemyTex;
+        Texture2D heartTex;
+
 
         List<Enemy> enemy;
         
@@ -47,6 +50,8 @@ namespace Space_Invaders
 
             // TODO: use this.Content to load your game content here
 
+            heartTex = Content.Load<Texture2D>("Undertale");
+
             enemyTex = Content.Load<Texture2D>("alien02_sprites");
 
             enemy = new List<Enemy>();
@@ -71,17 +76,29 @@ namespace Space_Invaders
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            
 
-         
+
+
 
             // TODO: Add your update logic here
             {
-                
+
             }
 
             player.Update(Window.ClientBounds.Width);
 
+            KeyboardState state = Keyboard.GetState();
+
+            if (state.IsKeyDown(Keys.K) && previousState.IsKeyUp(Keys.K))
+            { // lose one life when K is pressed
+                if (player.Lives > 0)
+                    player.Lives--;
+            }
+            // exit game if no lives left
+            if (player.Lives == 0) 
+                Exit();
+
+            previousState = state;
 
             base.Update(gameTime);
         }
@@ -98,6 +115,15 @@ namespace Space_Invaders
                 enemy[i].Draw(_spriteBatch);
             }
             player.Draw(_spriteBatch);
+            for (int i = 0; i < player.Lives; i++)
+            {
+                int scale = 4;
+                int w = heartTex.Width / scale;
+                int h = heartTex.Height / scale;
+                int x = 10 + i * (w + 5);
+                int y = 10;
+                _spriteBatch.Draw(heartTex, new Rectangle(x, y, w, h), Color.White); /// draw texture
+            }
             _spriteBatch.End();
 
             base.Draw(gameTime);
