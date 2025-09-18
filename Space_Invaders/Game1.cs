@@ -87,7 +87,7 @@ namespace Space_Invaders
             // TODO: Add your update logic here
 
             player.Update(Window.ClientBounds.Width);
-            bullet.Update();
+            bullet.Update(player.pos1);
 
 
             

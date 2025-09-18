@@ -12,6 +12,7 @@ namespace Space_Invaders
         public static Rectangle bulletRec;
         public Rectangle bulletHitBox;
         public bool bulletUsed = false;
+        Vector2 playerPos;
 
 
         public Bullet(Texture2D bulletTex,Vector2 bulletPos)
@@ -22,11 +23,13 @@ namespace Space_Invaders
             bulletHitBox = new Rectangle((int)bulletPos.X, (int)bulletPos.Y, 20, 50);
         }
 
-        public void Update()
+        public void Update(Vector2 playerPos) // behöver player position för att skjuta från rätt ställe
         {
+            bulletPos.X = playerPos.X + 20;
             if (bulletUsed == false)
-            { 
-                bulletPos.Y -= 5;
+            {
+                //bulletPos.X = playerPos.X;
+                //bulletPos.Y -= 5;
                 bulletHitBox.Y = (int)bulletPos.Y;
                 bulletHitBox.X = (int)bulletPos.X;
             }
