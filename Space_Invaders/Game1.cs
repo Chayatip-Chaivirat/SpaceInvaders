@@ -16,7 +16,9 @@ namespace Space_Invaders
         List<Enemy> enemyList;
         Player player;
         public bool enemyIsAlive = true;
+        public bool bulletUsed = false;
         Bullet bullet;
+
         List<Rectangle> itemToRemove;
 
 
@@ -83,23 +85,22 @@ namespace Space_Invaders
          
 
             // TODO: Add your update logic here
-            {
-                
-            }
 
             player.Update(Window.ClientBounds.Width);
             bullet.Update();
 
 
-            Rectangle enemyRec = Enemy.enemyRec;
-            Rectangle bulletRec = Bullet.bulletRec;
-
-            if (bulletRec.Intersects(enemyRec))
+            
+            foreach (Enemy ene in enemyList)
             {
-                itemToRemove.Add(enemyRec);
-                enemyIsAlive = false;
+                if (bullet.bulletHitBox.Intersects(ene.enemyHitBox))
+                {
+                    bullet.bulletHitBox.Intersects(ene.enemyHitBox);
+                    ene.enemyIsAlive = false;
+                    bulletUsed = true;
+                    itemToRemove.Add(ene.enemyHitBox);
+                }
             }
-
 
             base.Update(gameTime);
         }
@@ -112,16 +113,26 @@ namespace Space_Invaders
             _spriteBatch.Begin();
 
             //enemyClass.Draw(_spriteBatch);
-            bullet.Draw(_spriteBatch);
-
-
-            if (enemyIsAlive == true)
+            if (bulletUsed == false)
             {
-                for (int i = 0; i < enemyList.Count; i++)
-                {
-                    enemyList[i].Draw(_spriteBatch);
-                }
+                bullet.Draw(_spriteBatch);
             }
+                
+
+            foreach (Enemy ene in enemyList)
+            {
+                if (ene.enemyIsAlive == true)
+                {
+                    ene.Draw(_spriteBatch);
+                }
+                //   for (int i = 0; i < enemyList.Count; i++)
+                //{
+                //    enemyList[i].Draw(_spriteBatch);
+                //}
+            
+
+            }
+            
             
             //if (enemyIsAlive == true)
             //{
