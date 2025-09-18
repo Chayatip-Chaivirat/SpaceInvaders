@@ -24,10 +24,12 @@ namespace Space_Invaders
 
         public void Update()
         {
-            bulletPos.Y -= 5;
-            //bulletPos.X = (int) playerPos.X;
-            bulletHitBox.Y = (int)bulletPos.Y;
-            bulletHitBox.X = (int)bulletPos.X;
+            if (bulletUsed == false)
+            { 
+                bulletPos.Y -= 5;
+                bulletHitBox.Y = (int)bulletPos.Y;
+                bulletHitBox.X = (int)bulletPos.X;
+            }
         }
 
         public void Draw(SpriteBatch sb)

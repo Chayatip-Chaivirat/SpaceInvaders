@@ -97,7 +97,7 @@ namespace Space_Invaders
                 {
                     bullet.bulletHitBox.Intersects(ene.enemyHitBox);
                     ene.enemyIsAlive = false;
-                    bulletUsed = true;
+                    bullet.bulletUsed = true;
                     itemToRemove.Add(ene.enemyHitBox);
                 }
             }
@@ -113,7 +113,7 @@ namespace Space_Invaders
             _spriteBatch.Begin();
 
             //enemyClass.Draw(_spriteBatch);
-            if (bulletUsed == false)
+            if (bullet.bulletUsed == false)
             {
                 bullet.Draw(_spriteBatch);
             }
