@@ -15,7 +15,9 @@ internal class Player
     {
         this.playerTexture = tex;
         this.pos1 = startPos;
+        
     }
+   
 
     Rectangle startpos = new Rectangle(0, 0, 32, 32);
     int speed = 100;
