@@ -25,6 +25,18 @@
 /processorParam:TextureFormat=Color
 /build:alien02_sprites.png
 
+#begin bullet_1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:bullet_1.png
+
 #begin Ship_01-1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -37,6 +49,7 @@
 /processorParam:TextureFormat=Color
 /build:Ship_01-1.png
 
+
 #begin Undertale.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -48,4 +61,5 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Undertale.png
+
 

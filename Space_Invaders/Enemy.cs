@@ -9,14 +9,17 @@ namespace Space_Invaders
     {
         Texture2D enemyTex;
         Vector2 pos;
-        Rectangle enemyRec;
-        
+        public Rectangle enemyRec;
+        public bool enemyIsAlive = true;
+        public Rectangle enemyHitBox;
 
-        public Enemy(Texture2D enemyTex, int x, int y)
+        public Enemy(Texture2D enemyTex, int x, int y )
         {
             this.enemyTex = enemyTex;
             this.pos = new Vector2 (x, y);
             enemyRec = new Rectangle(0, 0, 100, 90);
+            this.enemyIsAlive = true;
+            enemyHitBox = new Rectangle(x, y, 100, 90);
         }
 
 
