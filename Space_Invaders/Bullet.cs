@@ -20,26 +20,20 @@ namespace Space_Invaders
             this.bulletTex = bulletTex;
             this.bulletPos = bulletPos;
             bulletRec = new Rectangle(0, 0, 67, 70); 
-            bulletHitBox = new Rectangle((int)bulletPos.X, (int)bulletPos.Y, 20, 50);
+            bulletHitBox = new Rectangle((int)bulletPos.X, (int)bulletPos.Y, 20, 100);
             this.bulletUsed = false;
         }
 
-        public void Update(Vector2 playerPos) // behöver player position för att skjuta från rätt ställe
+        public void Update(Vector2 playerPos, GameTime gameTime) // behöver player position för att skjuta från rätt ställe
         {
             
             if (bulletUsed == false)
             {
+                bulletPos.Y -= 80;
                 bulletPos.X = playerPos.X + 20;
                 bulletHitBox.Y = (int)bulletPos.Y;
                 bulletHitBox.X = (int)bulletPos.X;
             }
-
-            KeyboardState state = Keyboard.GetState();
-            if (state.IsKeyDown(Keys.Space))
-            {
-                bulletPos.Y -= 75;
-            }
-
         }
 
         public void Draw(SpriteBatch sb)

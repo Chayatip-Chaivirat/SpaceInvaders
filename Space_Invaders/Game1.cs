@@ -9,7 +9,8 @@ namespace Space_Invaders
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-
+        KeyboardState keyBoardState;
+        KeyboardState previousKeyBoardState;
         Texture2D enemyTex;
         Texture2D bulletTex;
         Enemy enemyClass;
@@ -20,6 +21,7 @@ namespace Space_Invaders
         Bullet bullet;
 
         List<Rectangle> itemToRemove;
+        List<Bullet> bulletList;
 
 
         public Game1()
@@ -73,6 +75,9 @@ namespace Space_Invaders
 
             bulletTex = Content.Load<Texture2D>("bullet_1");
             bullet = new Bullet(bulletTex, playerPos);
+            bulletList = new List<Bullet>();
+            bulletList.Add(bullet);
+            bullet.bulletUsed = true;
 
         }
 
@@ -87,20 +92,58 @@ namespace Space_Invaders
             // TODO: Add your update logic here
 
             player.Update(Window.ClientBounds.Width);
-            bullet.Update(player.pos1);
+            
+            
+            //bullet.Update(player.pos1, gameTime);
 
 
             
             foreach (Enemy ene in enemyList)
             {
-                if (bullet.bulletHitBox.Intersects(ene.enemyHitBox))
+                foreach (Bullet b in bulletList)
                 {
-                    bullet.bulletHitBox.Intersects(ene.enemyHitBox);
-                    ene.enemyIsAlive = false;
-                    bullet.bulletUsed = true;
-                    itemToRemove.Add(ene.enemyHitBox);
+                    if (b.bulletHitBox.Intersects(ene.enemyHitBox))
+                    {
+                        b.bulletHitBox.Intersects(ene.enemyHitBox);
+                        ene.enemyIsAlive = false;
+                        b.bulletUsed = true;
+                        itemToRemove.Add(ene.enemyHitBox);
+                    }
                 }
             }
+
+            foreach (Bullet b in bulletList)
+            {
+                b.Update(player.pos1, gameTime);
+            }
+
+                KeyboardState state = Keyboard.GetState();
+            previousKeyBoardState = state;
+
+            //if (previousKeyBoardState.IsKeyDown(Keys.Space))
+            //{
+            //    bullet.bulletPos.Y -= 75;
+            //}
+
+            if(previousKeyBoardState.IsKeyDown(Keys.Space))
+            {
+                bulletList.Add(new Bullet(bulletTex, player.pos1));
+                bullet.bulletUsed = false;
+            }
+
+            foreach (Bullet b in bulletList)
+            {
+                if (b.bulletPos.Y < 0)
+                {
+                    b.bulletPos.Y = player.pos1.Y;
+                }
+
+            }
+
+            //if (bulletList.Count < 0)
+            //{
+            //    bulletList.Add(new Bullet(bulletTex, player.pos1));
+            //}
 
             base.Update(gameTime);
         }
@@ -111,13 +154,14 @@ namespace Space_Invaders
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-
-            //enemyClass.Draw(_spriteBatch);
-            if (bullet.bulletUsed == false)
+            foreach (Bullet b in bulletList)
             {
-                bullet.Draw(_spriteBatch);
+                if (b.bulletUsed == false)
+                {
+                    b.Draw(_spriteBatch);
+                }
             }
-                
+
 
             foreach (Enemy ene in enemyList)
             {
@@ -125,33 +169,8 @@ namespace Space_Invaders
                 {
                     ene.Draw(_spriteBatch);
                 }
-                //   for (int i = 0; i < enemyList.Count; i++)
-                //{
-                //    enemyList[i].Draw(_spriteBatch);
-                //}
-            
-
             }
-            
-            
-            //if (enemyIsAlive == true)
-            //{
-            //    foreach (Enemy ene in enemyList)
-            //    {
-            //        ene.Draw(_spriteBatch);
-            //    }
-            //}
-
-            //for (int i = 0; i < enemyList.Count; i++)
-            //{
-            //    enemyList[i].Draw(_spriteBatch);
-            //    if (enemyIsAlive == false)
-            //    {
-            //        enemyList.RemoveAt(i);
-            //    }
-            //}
-
-
+           
             player.Draw(_spriteBatch);
             
             _spriteBatch.End();
