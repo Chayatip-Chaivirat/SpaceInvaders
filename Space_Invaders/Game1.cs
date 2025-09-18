@@ -7,14 +7,24 @@ namespace Space_Invaders
 {
     public class Game1 : Game
     {
+        private KeyboardState previousState;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         KeyboardState keyBoardState;
         KeyboardState previousKeyBoardState;
         Texture2D enemyTex;
+
         Texture2D bulletTex;
         Enemy enemyClass;
         List<Enemy> enemyList;
+
+        Texture2D heartTex;
+
+
+        List<Enemy> enemy;
+        
+
+
         Player player;
         public bool enemyIsAlive = true;
         public bool bulletUsed = false;
@@ -60,6 +70,12 @@ namespace Space_Invaders
             enemyList = new List<Enemy>();
             itemToRemove = new List<Rectangle>();
 
+            heartTex = Content.Load<Texture2D>("Undertale");
+
+            enemyTex = Content.Load<Texture2D>("alien02_sprites");
+
+            enemy = new List<Enemy>();
+
 
             for (int i = 0; i < 3; i++)
             {
@@ -85,9 +101,9 @@ namespace Space_Invaders
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            
 
-         
+
+
 
             // TODO: Add your update logic here
 
@@ -100,6 +116,7 @@ namespace Space_Invaders
             
             foreach (Enemy ene in enemyList)
             {
+
                 foreach (Bullet b in bulletList)
                 {
                     if (b.bulletHitBox.Intersects(ene.enemyHitBox))
@@ -110,6 +127,7 @@ namespace Space_Invaders
                         itemToRemove.Add(ene.enemyHitBox);
                     }
                 }
+
             }
 
             foreach (Bullet b in bulletList)
@@ -119,6 +137,7 @@ namespace Space_Invaders
 
                 KeyboardState state = Keyboard.GetState();
             previousKeyBoardState = state;
+
 
             //if (previousKeyBoardState.IsKeyDown(Keys.Space))
             //{
@@ -143,7 +162,20 @@ namespace Space_Invaders
             //if (bulletList.Count < 0)
             //{
             //    bulletList.Add(new Bullet(bulletTex, player.pos1));
-            //}
+
+            KeyboardState state = Keyboard.GetState();
+
+            if (state.IsKeyDown(Keys.K) && previousState.IsKeyUp(Keys.K))
+            { // lose one life when K is pressed
+                if (player.Lives > 0)
+                    player.Lives--;
+            }
+            // exit game if no lives left
+            if (player.Lives == 0) 
+                Exit();
+
+            previousState = state;
+
 
             base.Update(gameTime);
         }
@@ -172,7 +204,17 @@ namespace Space_Invaders
             }
            
             player.Draw(_spriteBatch);
-            
+
+            for (int i = 0; i < player.Lives; i++)
+            {
+                int scale = 4;
+                int w = heartTex.Width / scale;
+                int h = heartTex.Height / scale;
+                int x = 10 + i * (w + 5);
+                int y = 10;
+                _spriteBatch.Draw(heartTex, new Rectangle(x, y, w, h), Color.White); /// draw texture
+            }
+
             _spriteBatch.End();
 
             base.Draw(gameTime);
