@@ -163,8 +163,6 @@ namespace Space_Invaders
             //{
             //    bulletList.Add(new Bullet(bulletTex, player.pos1));
 
-            KeyboardState state = Keyboard.GetState();
-
             if (state.IsKeyDown(Keys.K) && previousState.IsKeyUp(Keys.K))
             { // lose one life when K is pressed
                 if (player.Lives > 0)
