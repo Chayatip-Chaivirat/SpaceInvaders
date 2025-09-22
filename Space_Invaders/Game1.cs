@@ -124,7 +124,7 @@ namespace Space_Invaders
                         ene.enemyIsAlive = false;
                         b.bulletUsed = true;
                         itemToRemove.Add(ene.enemyHitBox);
-                        itemToRemove.Add(ene.enemyRec);
+                        
                     }
                    
                 }
@@ -132,8 +132,17 @@ namespace Space_Invaders
             }
 
 
-            // remove dead enemies
-            enemyList.RemoveAll(ene => ene.enemyIsAlive == false);
+            foreach (Enemy ene in enemyList)
+            {
+                if (ene.enemyIsAlive == false)
+                {
+                    itemToRemove.Add(ene.enemyRec);
+                }
+            }
+
+
+                // remove dead enemies
+                enemyList.RemoveAll(ene => ene.enemyIsAlive == false);
 
             foreach (Bullet b in bulletList)
             {
@@ -163,7 +172,13 @@ namespace Space_Invaders
 
             if(previousKeyBoardState.IsKeyDown(Keys.Space))
             {
-                bulletList.Add(new Bullet(bulletTex, player.pos1));
+                int max_bullets = 1;
+                if (bulletList.Count < max_bullets)
+                { 
+                    bulletList.Add(new Bullet(bulletTex, player.pos1));
+
+                }
+               
             }
 
             //foreach (Bullet b in bulletList)
