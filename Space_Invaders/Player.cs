@@ -28,11 +28,11 @@ internal class Player
         KeyboardState state = Keyboard.GetState();
 
         if (state.IsKeyDown(Keys.Left))
-        { // player position (x) decreases moving left
+        { 
             pos1.X -= speed * 0.046f;
         }
         if (state.IsKeyDown(Keys.Right))
-        { // player position (x) increases moving left
+        { 
             pos1.X += speed * 0.046f;
         }
 

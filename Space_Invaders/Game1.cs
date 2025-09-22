@@ -61,7 +61,7 @@ namespace Space_Invaders
             Texture2D playerTexture = Content.Load<Texture2D>("Ship_01-1");
             Vector2 playerPos = new Vector2(300, 800);
             Vector2 enemyPos = new Vector2(65, 100);
-            Texture2D enemyTex = Content.Load<Texture2D>("alien02_sprites");
+            enemyTex = Content.Load<Texture2D>("alien02_sprites");
             player = new Player(playerTexture, playerPos);
             enemyClass = new Enemy(enemyTex, (int)enemyPos.X, (int)enemyPos.Y);
             
@@ -247,6 +247,7 @@ namespace Space_Invaders
             {
                 _spriteBatch.DrawString(scoreSpriteFont, "Score: " + score, scorePos, Color.Black);
             }
+            Window.Title = "Space Invaders - Lives: " + Lives + " Score: " + score;
 
             _spriteBatch.End();
 
