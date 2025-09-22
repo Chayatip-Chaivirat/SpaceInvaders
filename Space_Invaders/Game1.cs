@@ -12,9 +12,6 @@ namespace Space_Invaders
         private SpriteBatch _spriteBatch;
         KeyboardState keyBoardState;
         KeyboardState previousKeyBoardState;
-        Texture2D enemyTex;
-
-        Texture2D bulletTex;
         Enemy enemyClass;
         List<Enemy> enemyList;
 
@@ -62,7 +59,7 @@ namespace Space_Invaders
             Texture2D playerTexture = Content.Load<Texture2D>("Ship_01-1");
             Vector2 playerPos = new Vector2(300, 800);
             Vector2 enemyPos = new Vector2(65, 100);
-            enemyTex = Content.Load<Texture2D>("alien02_sprites");
+            Texture2D enemyTex = Content.Load<Texture2D>("alien02_sprites");
             player = new Player(playerTexture, playerPos);
             enemyClass = new Enemy(enemyTex, (int)enemyPos.X, (int)enemyPos.Y);
             
@@ -95,7 +92,7 @@ namespace Space_Invaders
                 }
             }
 
-            bulletTex = Content.Load<Texture2D>("bullet_1");
+            Texture2D bulletTex = Content.Load<Texture2D>("bullet_1");
             bullet = new Bullet(bulletTex, playerPos);
             bulletList = new List<Bullet>();
             bulletList.Add(bullet);
