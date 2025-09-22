@@ -24,7 +24,6 @@ namespace Space_Invaders
 
         public void Update(Vector2 playerPos, GameTime gameTime) // behöver player position för att skjuta från rätt ställe
         {
-
             if (bulletUsed == false)
             {
                 bulletPos.Y -= 10;

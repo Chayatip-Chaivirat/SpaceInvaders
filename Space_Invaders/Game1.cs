@@ -124,11 +124,16 @@ namespace Space_Invaders
                         ene.enemyIsAlive = false;
                         b.bulletUsed = true;
                         itemToRemove.Add(ene.enemyHitBox);
+                        itemToRemove.Add(ene.enemyRec);
                     }
                    
                 }
 
             }
+
+
+            // remove dead enemies
+            enemyList.RemoveAll(ene => ene.enemyIsAlive == false);
 
             foreach (Bullet b in bulletList)
             {
