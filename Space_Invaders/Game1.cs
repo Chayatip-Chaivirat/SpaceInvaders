@@ -109,12 +109,12 @@ namespace Space_Invaders
             // TODO: Add your update logic here
 
             player.Update(Window.ClientBounds.Width);
-            
-            
+
+
             //bullet.Update(player.pos1, gameTime);
 
 
-            
+
             foreach (Enemy ene in enemyList)
             {
 
@@ -125,9 +125,9 @@ namespace Space_Invaders
                         ene.enemyIsAlive = false;
                         b.bulletUsed = true;
                         itemToRemove.Add(ene.enemyHitBox);
-                        
+
                     }
-                   
+
                 }
 
             }
@@ -142,8 +142,8 @@ namespace Space_Invaders
             }
 
 
-                // remove dead enemies
-                enemyList.RemoveAll(ene => ene.enemyIsAlive == false);
+            // remove dead enemies
+            enemyList.RemoveAll(ene => ene.enemyIsAlive == false);
 
             foreach (Bullet b in bulletList)
             {
@@ -159,21 +159,21 @@ namespace Space_Invaders
                 ene.Update();
             }
 
-                // remove inactive bullets
-                bulletList.RemoveAll(b => b.bulletUsed == true);
+            // remove inactive bullets
+            bulletList.RemoveAll(b => b.bulletUsed == true);
 
             KeyboardState state = Keyboard.GetState();
             previousKeyBoardState = state;
 
 
-            if(previousKeyBoardState.IsKeyDown(Keys.Space))
+            if (previousKeyBoardState.IsKeyDown(Keys.Space))
             {
                 int max_bullets = 1;
                 if (bulletList.Count < max_bullets) // only one bullet at a time
-                { 
+                {
                     bulletList.Add(new Bullet(bulletTex, player.pos1));
                 }
-               
+
             }
 
             // lose one life when enemy reaches bottom
@@ -184,25 +184,21 @@ namespace Space_Invaders
                     if (Lives > 0)
                     {
                         Lives -= 1;
-
+                        ene.enemyIsAlive = false;
+                        itemToRemove.Add(ene.enemyRec);
+                        itemToRemove.Add(ene.enemyHitBox);
                     }
-
+                    else
+                    {
+                        Exit();
+                    }
                 }
+
+                previousState = state;
+
+
+                base.Update(gameTime);
             }
-
-            //if (state.IsKeyDown(Keys.K) && previousState.IsKeyUp(Keys.K))
-            //{ // lose one life when K is pressed
-            //    if (player.Lives > 0)
-            //        player.Lives--;
-            //}
-            //// exit game if no lives left
-            //if (player.Lives == 0) 
-            //    Exit();
-
-            previousState = state;
-
-
-            base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
