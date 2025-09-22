@@ -19,13 +19,15 @@ namespace Space_Invaders
         List<Enemy> enemyList;
 
         Texture2D heartTex;
+        Texture2D titleTex;
+        Vector2 titlePos;
 
         public int Lives = 5;
         int score = 0;
         SpriteFont scoreSpriteFont;
         Vector2 scorePos = new Vector2(550, 10);
-
-
+        
+        private Vector2 pos1;
 
         Player player;
         public bool enemyIsAlive = true;
@@ -76,7 +78,9 @@ namespace Space_Invaders
 
             enemyTex = Content.Load<Texture2D>("alien02_sprites");
 
-            enemyList = new List<Enemy>();
+            titleTex = Content.Load<Texture2D>("titlenew");
+            titlePos = new Vector2(250, 0);
+           
 
 
             for (int i = 0; i < 3; i++)
@@ -108,8 +112,15 @@ namespace Space_Invaders
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            for (int i = 0; i < 10; i++) 
+            {
+                if (enemy == null)
+                    score = 0;
+                else score < 1;
+               
+ 
 
-
+              
 
             // TODO: Add your update logic here
 
@@ -201,9 +212,11 @@ namespace Space_Invaders
                 }
 
 
-                base.Update(gameTime);
+            base.Update(gameTime);
             }
+            
         }
+
 
         protected override void Draw(GameTime gameTime)
         {
@@ -238,6 +251,7 @@ namespace Space_Invaders
                 int x = 10 + i * (w + 5);
                 int y = 10;
                 _spriteBatch.Draw(heartTex, new Rectangle(x, y, w, h), Color.White); /// draw texture
+                _spriteBatch.Draw(titleTex, titlePos, Color.White);
             }
 
             if (score  > 0)
