@@ -22,7 +22,8 @@ namespace Space_Invaders
 
 
         List<Enemy> enemy;
-        
+        public int Lives = 5;
+
 
 
         Player player;
@@ -165,43 +166,38 @@ namespace Space_Invaders
             previousKeyBoardState = state;
 
 
-            //if (previousKeyBoardState.IsKeyDown(Keys.Space))
-            //{
-            //    bullet.bulletPos.Y -= 75;
-            //}
-
             if(previousKeyBoardState.IsKeyDown(Keys.Space))
             {
                 int max_bullets = 1;
-                if (bulletList.Count < max_bullets)
+                if (bulletList.Count < max_bullets) // only one bullet at a time
                 { 
                     bulletList.Add(new Bullet(bulletTex, player.pos1));
-
                 }
                
             }
 
-            //foreach (Bullet b in bulletList)
-            //{
-            //    if (b.bulletPos.Y < 0)
-            //    {
-            //        b.bulletPos.Y = player.pos1.Y;
-            //    }
+            // lose one life when enemy reaches bottom
+            foreach (Enemy ene in enemyList)
+            {
+                if (ene.enemyPos.Y >= 750 - enemyTex.Height)
+                {
+                    if (Lives > 0)
+                    {
+                        Lives -= 1;
 
-            //}
+                    }
 
-            //if (bulletList.Count < 0)
-            //{
-            //    bulletList.Add(new Bullet(bulletTex, player.pos1));
-
-            if (state.IsKeyDown(Keys.K) && previousState.IsKeyUp(Keys.K))
-            { // lose one life when K is pressed
-                if (player.Lives > 0)
-                    player.Lives--;
+                }
             }
-            // exit game if no lives left
-            if (player.Lives == 0) 
-                Exit();
+
+            //if (state.IsKeyDown(Keys.K) && previousState.IsKeyUp(Keys.K))
+            //{ // lose one life when K is pressed
+            //    if (player.Lives > 0)
+            //        player.Lives--;
+            //}
+            //// exit game if no lives left
+            //if (player.Lives == 0) 
+            //    Exit();
 
             previousState = state;
 
@@ -234,7 +230,7 @@ namespace Space_Invaders
            
             player.Draw(_spriteBatch);
 
-            for (int i = 0; i < player.Lives; i++)
+            for (int i = 0; i < Lives; i++)
             {
                 int scale = 4;
                 int w = heartTex.Width / scale;
