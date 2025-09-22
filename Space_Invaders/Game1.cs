@@ -121,21 +121,33 @@ namespace Space_Invaders
                 {
                     if (b.bulletHitBox.Intersects(ene.enemyHitBox))
                     {
-                        b.bulletHitBox.Intersects(ene.enemyHitBox);
                         ene.enemyIsAlive = false;
                         b.bulletUsed = true;
                         itemToRemove.Add(ene.enemyHitBox);
                     }
+                   
                 }
 
             }
 
             foreach (Bullet b in bulletList)
             {
+                if (b.bulletPos.Y < 0)
+                {
+                    b.bulletUsed = true;
+                }
                 b.Update(player.pos1, gameTime);
             }
 
-                KeyboardState state = Keyboard.GetState();
+            foreach (Enemy ene in enemyList)
+            {
+                ene.Update();
+            }
+
+                // remove inactive bullets
+                bulletList.RemoveAll(b => b.bulletUsed == true);
+
+            KeyboardState state = Keyboard.GetState();
             previousKeyBoardState = state;
 
 
@@ -147,17 +159,16 @@ namespace Space_Invaders
             if(previousKeyBoardState.IsKeyDown(Keys.Space))
             {
                 bulletList.Add(new Bullet(bulletTex, player.pos1));
-                bullet.bulletUsed = false;
             }
 
-            foreach (Bullet b in bulletList)
-            {
-                if (b.bulletPos.Y < 0)
-                {
-                    b.bulletPos.Y = player.pos1.Y;
-                }
+            //foreach (Bullet b in bulletList)
+            //{
+            //    if (b.bulletPos.Y < 0)
+            //    {
+            //        b.bulletPos.Y = player.pos1.Y;
+            //    }
 
-            }
+            //}
 
             //if (bulletList.Count < 0)
             //{

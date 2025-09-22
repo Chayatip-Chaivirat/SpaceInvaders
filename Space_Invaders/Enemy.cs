@@ -25,7 +25,10 @@ namespace Space_Invaders
 
         public void Update()
         {
-           
+           enemyHitBox.X = (int)pos.X;
+           enemyHitBox.Y = (int)pos.Y;
+           enemyHitBox.Width = enemyRec.Width;
+           enemyHitBox.Height = enemyRec.Height;
         }
 
         public void Draw(SpriteBatch sb)

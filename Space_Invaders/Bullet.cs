@@ -10,7 +10,6 @@ namespace Space_Invaders
         Texture2D bulletTex;
         
         public Vector2 bulletPos;
-        public static Rectangle bulletRec;
         public Rectangle bulletHitBox;
         public bool bulletUsed = false;
 
@@ -18,19 +17,18 @@ namespace Space_Invaders
         public Bullet(Texture2D bulletTex,Vector2 bulletPos)
         {
             this.bulletTex = bulletTex;
-            this.bulletPos = bulletPos;
-            bulletRec = new Rectangle(0, 0, 67, 70); 
-            bulletHitBox = new Rectangle((int)bulletPos.X, (int)bulletPos.Y, 20, 100);
+            this.bulletPos = new Vector2(bulletPos.X + 20, bulletPos.Y);
+            bulletHitBox = new Rectangle((int)this.bulletPos.X, (int)this.bulletPos.Y, bulletTex.Width, bulletTex.Height);
             this.bulletUsed = false;
         }
 
         public void Update(Vector2 playerPos, GameTime gameTime) // behöver player position för att skjuta från rätt ställe
         {
-            
+
             if (bulletUsed == false)
             {
-                bulletPos.Y -= 80;
-                bulletPos.X = playerPos.X + 20;
+                bulletPos.Y -= 10;
+
                 bulletHitBox.Y = (int)bulletPos.Y;
                 bulletHitBox.X = (int)bulletPos.X;
             }
@@ -38,7 +36,7 @@ namespace Space_Invaders
 
         public void Draw(SpriteBatch sb)
         {
-            sb.Draw(bulletTex, bulletPos, bulletRec, Color.White);
+            sb.Draw(bulletTex, bulletPos, Color.White);
         }
     }
 }
