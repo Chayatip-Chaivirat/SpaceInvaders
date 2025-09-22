@@ -2,12 +2,12 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Space_Invaders
 {
     public class Game1 : Game
     {
-        private KeyboardState previousState;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         KeyboardState keyBoardState;
@@ -20,9 +20,10 @@ namespace Space_Invaders
 
         Texture2D heartTex;
 
-
-        List<Enemy> enemy;
         public int Lives = 5;
+        int score = 0;
+        SpriteFont scoreSpriteFont;
+        Vector2 scorePos = new Vector2(550, 10);
 
 
 
@@ -75,7 +76,7 @@ namespace Space_Invaders
 
             enemyTex = Content.Load<Texture2D>("alien02_sprites");
 
-            enemy = new List<Enemy>();
+            enemyList = new List<Enemy>();
 
 
             for (int i = 0; i < 3; i++)
@@ -95,6 +96,10 @@ namespace Space_Invaders
             bulletList = new List<Bullet>();
             bulletList.Add(bullet);
             bullet.bulletUsed = true;
+
+            //score
+            scoreSpriteFont = Content.Load<SpriteFont>("Score");
+            
 
         }
 
@@ -125,6 +130,7 @@ namespace Space_Invaders
                         ene.enemyIsAlive = false;
                         b.bulletUsed = true;
                         itemToRemove.Add(ene.enemyHitBox);
+                        score += 1;
 
                     }
 
@@ -194,8 +200,6 @@ namespace Space_Invaders
                     }
                 }
 
-                previousState = state;
-
 
                 base.Update(gameTime);
             }
@@ -234,6 +238,11 @@ namespace Space_Invaders
                 int x = 10 + i * (w + 5);
                 int y = 10;
                 _spriteBatch.Draw(heartTex, new Rectangle(x, y, w, h), Color.White); /// draw texture
+            }
+
+            if (score  > 0)
+            {
+                _spriteBatch.DrawString(scoreSpriteFont, "Score: " + score, scorePos, Color.Black);
             }
 
             _spriteBatch.End();
