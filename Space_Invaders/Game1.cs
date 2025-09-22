@@ -18,6 +18,7 @@ namespace Space_Invaders
         Texture2D heartTex;
         Texture2D titleTex;
         Vector2 titlePos;
+        Texture2D enemyTex;
 
         public int Lives = 5;
         int score = 0;
@@ -33,6 +34,7 @@ namespace Space_Invaders
 
         List<Rectangle> itemToRemove;
         List<Bullet> bulletList;
+        Texture2D bulletTex;
 
 
         public Game1()
@@ -72,9 +74,6 @@ namespace Space_Invaders
             itemToRemove = new List<Rectangle>();
 
             heartTex = Content.Load<Texture2D>("Undertale");
-
-            enemyTex = Content.Load<Texture2D>("alien02_sprites");
-
             titleTex = Content.Load<Texture2D>("titlenew");
             titlePos = new Vector2(250, 0);
            
@@ -92,7 +91,7 @@ namespace Space_Invaders
                 }
             }
 
-            Texture2D bulletTex = Content.Load<Texture2D>("bullet_1");
+            bulletTex = Content.Load<Texture2D>("bullet_1");
             bullet = new Bullet(bulletTex, playerPos);
             bulletList = new List<Bullet>();
             bulletList.Add(bullet);
