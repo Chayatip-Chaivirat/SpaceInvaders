@@ -2,27 +2,41 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Space_Invaders
 {
     public class Game1 : Game
     {
-        private KeyboardState previousState;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-
+        KeyboardState keyBoardState;
+        KeyboardState previousKeyBoardState;
         Texture2D enemyTex;
+
+        Texture2D bulletTex;
+        Enemy enemyClass;
+        List<Enemy> enemyList;
+
         Texture2D heartTex;
         Texture2D titleTex;
         Vector2 titlePos;
 
-
-        List<Enemy> enemy;
+        public int Lives = 5;
         int score = 0;
+        SpriteFont scoreSpriteFont;
+        Vector2 scorePos = new Vector2(550, 10);
         
+        private Vector2 pos1;
 
         Player player;
-        private Vector2 pos1;
+        public bool enemyIsAlive = true;
+        public bool bulletUsed = false;
+        Bullet bullet;
+
+        List<Rectangle> itemToRemove;
+        List<Bullet> bulletList;
+
 
         public Game1()
         {
@@ -47,10 +61,18 @@ namespace Space_Invaders
 
             Texture2D playerTexture = Content.Load<Texture2D>("Ship_01-1");
             Vector2 playerPos = new Vector2(300, 800);
-            Vector2 startPos = new Vector2(65, 100);
+            Vector2 enemyPos = new Vector2(65, 100);
+            enemyTex = Content.Load<Texture2D>("alien02_sprites");
             player = new Player(playerTexture, playerPos);
+            enemyClass = new Enemy(enemyTex, (int)enemyPos.X, (int)enemyPos.Y);
+            
 
             // TODO: use this.Content to load your game content here
+
+            
+            
+            enemyList = new List<Enemy>();
+            itemToRemove = new List<Rectangle>();
 
             heartTex = Content.Load<Texture2D>("Undertale");
 
@@ -59,24 +81,30 @@ namespace Space_Invaders
             titleTex = Content.Load<Texture2D>("titlenew");
             titlePos = new Vector2(250, 0);
            
-         
-
-            enemy = new List<Enemy>();
 
 
             for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 5; j++)
                 {
-                    int x = (int) startPos.X + j * 120;
-                    int y = (int) startPos.Y + i * 100;
+                    int x = (int) enemyPos.X + j * 120;
+                    int y = (int) enemyPos.Y + i * 100;
 
                     Enemy ene = new Enemy(enemyTex, x, y);
-                    enemy.Add(ene);
+                    enemyList.Add(ene);
                 }
             }
 
+            bulletTex = Content.Load<Texture2D>("bullet_1");
+            bullet = new Bullet(bulletTex, playerPos);
+            bulletList = new List<Bullet>();
+            bulletList.Add(bullet);
+            bullet.bulletUsed = true;
+
+            //score
+            scoreSpriteFont = Content.Load<SpriteFont>("Score");
             
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -95,27 +123,100 @@ namespace Space_Invaders
               
 
             // TODO: Add your update logic here
-            {
-
-            }
 
             player.Update(Window.ClientBounds.Width);
 
-            KeyboardState state = Keyboard.GetState();
 
-            if (state.IsKeyDown(Keys.K) && previousState.IsKeyUp(Keys.K))
-            { // lose one life when K is pressed
-                if (player.Lives > 0)
-                    player.Lives--;
+            //bullet.Update(player.pos1, gameTime);
+
+
+
+            foreach (Enemy ene in enemyList)
+            {
+
+                foreach (Bullet b in bulletList)
+                {
+                    if (b.bulletHitBox.Intersects(ene.enemyHitBox))
+                    {
+                        ene.enemyIsAlive = false;
+                        b.bulletUsed = true;
+                        itemToRemove.Add(ene.enemyHitBox);
+                        score += 1;
+
+                    }
+
+                }
+
             }
-            // exit game if no lives left
-            if (player.Lives == 0) 
-                Exit();
 
-            previousState = state;
+
+            foreach (Enemy ene in enemyList)
+            {
+                if (ene.enemyIsAlive == false)
+                {
+                    itemToRemove.Add(ene.enemyRec);
+                }
+            }
+
+
+            // remove dead enemies
+            enemyList.RemoveAll(ene => ene.enemyIsAlive == false);
+
+            foreach (Bullet b in bulletList)
+            {
+                if (b.bulletPos.Y < 0)
+                {
+                    b.bulletUsed = true;
+                }
+                b.Update(player.pos1, gameTime);
+            }
+
+            foreach (Enemy ene in enemyList)
+            {
+                ene.Update();
+            }
+
+            // remove inactive bullets
+            bulletList.RemoveAll(b => b.bulletUsed == true);
+
+            KeyboardState state = Keyboard.GetState();
+            previousKeyBoardState = state;
+
+
+            if (previousKeyBoardState.IsKeyDown(Keys.Space))
+            {
+                int max_bullets = 1;
+                if (bulletList.Count < max_bullets) // only one bullet at a time
+                {
+                    bulletList.Add(new Bullet(bulletTex, player.pos1));
+                }
+
+            }
+
+            // lose one life when enemy reaches bottom
+            foreach (Enemy ene in enemyList)
+            {
+                if (ene.enemyPos.Y >= 750 - enemyTex.Height)
+                {
+                    if (Lives > 0)
+                    {
+                        Lives -= 1;
+                        ene.enemyIsAlive = false;
+                        itemToRemove.Add(ene.enemyRec);
+                        itemToRemove.Add(ene.enemyHitBox);
+                    }
+                    else
+                    {
+                        Exit();
+                    }
+                }
+
 
             base.Update(gameTime);
             }
+            
+        }
+
 
         protected override void Draw(GameTime gameTime)
         {
@@ -123,13 +224,26 @@ namespace Space_Invaders
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-
-            for (int i = 0; i < enemy.Count; i++)
+            foreach (Bullet b in bulletList)
             {
-                enemy[i].Draw(_spriteBatch);
+                if (b.bulletUsed == false)
+                {
+                    b.Draw(_spriteBatch);
+                }
             }
+
+
+            foreach (Enemy ene in enemyList)
+            {
+                if (ene.enemyIsAlive == true)
+                {
+                    ene.Draw(_spriteBatch);
+                }
+            }
+           
             player.Draw(_spriteBatch);
-            for (int i = 0; i < player.Lives; i++)
+
+            for (int i = 0; i < Lives; i++)
             {
                 int scale = 4;
                 int w = heartTex.Width / scale;
@@ -139,6 +253,12 @@ namespace Space_Invaders
                 _spriteBatch.Draw(heartTex, new Rectangle(x, y, w, h), Color.White); /// draw texture
                 _spriteBatch.Draw(titleTex, titlePos, Color.White);
             }
+
+            if (score  > 0)
+            {
+                _spriteBatch.DrawString(scoreSpriteFont, "Score: " + score, scorePos, Color.Black);
+            }
+
             _spriteBatch.End();
 
             base.Draw(gameTime);

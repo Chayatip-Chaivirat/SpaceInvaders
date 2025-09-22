@@ -2,13 +2,13 @@
 using System.Diagnostics.Eventing.Reader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Space_Invaders;
 
 
 internal class Player
 {
     public Texture2D playerTexture;
     public Vector2 pos1 = Vector2.Zero;
-    public int Lives = 5;
 
 
     public Player(Texture2D tex, Vector2 startPos)
