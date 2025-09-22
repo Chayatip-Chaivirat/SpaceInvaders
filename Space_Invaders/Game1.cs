@@ -111,13 +111,6 @@ namespace Space_Invaders
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            for (int i = 0; i < 10; i++) 
-            {
-                if (enemy == null)
-                    score = 0;
-                else score < 1;
-               
  
 
               
