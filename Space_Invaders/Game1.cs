@@ -12,29 +12,37 @@ namespace Space_Invaders
         private SpriteBatch _spriteBatch;
         KeyboardState keyBoardState;
         KeyboardState previousKeyBoardState;
+
+        //========== Enemy ==========
         Enemy enemyClass;
         List<Enemy> enemyList;
-
-        Texture2D heartTex;
-        Texture2D titleTex;
-        Vector2 titlePos;
         Texture2D enemyTex;
 
+        //========== Lives ==========
+        Texture2D heartTex;
         public int Lives = 5;
+
+        //========== Title ==========
+        Texture2D titleTex;
+        Vector2 titlePos;
+
+        //========== Score ==========
         int score = 0;
         SpriteFont scoreSpriteFont;
-        Vector2 scorePos = new Vector2(550, 10);
-        
-        private Vector2 pos1;
 
+        //========== Player ==========
         Player player;
         public bool enemyIsAlive = true;
         public bool bulletUsed = false;
         Bullet bullet;
 
-        List<Rectangle> itemToRemove;
+        //========== Bullet ==========
         List<Bullet> bulletList;
         Texture2D bulletTex;
+
+        //========== Item to Remove ==========
+        List<Rectangle> itemToRemove;
+       
 
 
         public Game1()
@@ -116,7 +124,7 @@ namespace Space_Invaders
             player.Update(Window.ClientBounds.Width);
 
 
-            //bullet.Update(player.pos1, gameTime);
+    
 
 
 
@@ -243,6 +251,7 @@ namespace Space_Invaders
                 _spriteBatch.Draw(titleTex, titlePos, Color.White);
             }
 
+            Vector2 scorePos = new Vector2(550, 10);
             if (score  > 0)
             {
                 _spriteBatch.DrawString(scoreSpriteFont, "Score: " + score, scorePos, Color.Black);
