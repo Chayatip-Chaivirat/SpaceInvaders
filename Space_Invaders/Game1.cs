@@ -66,28 +66,16 @@ namespace Space_Invaders
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Texture2D playerTexture = Content.Load<Texture2D>("Ship_01-1");
-            Vector2 playerPos = new Vector2(300, 800);
-            Vector2 enemyPos = new Vector2(65, 100);
-            enemyTex = Content.Load<Texture2D>("alien02_sprites");
-            player = new Player(playerTexture, playerPos);
-            enemyClass = new Enemy(enemyTex, (int)enemyPos.X, (int)enemyPos.Y);
-            
 
-            // TODO: use this.Content to load your game content here
-
-            
-            
-            enemyList = new List<Enemy>();
+            //========== Item to Remove ==========
             itemToRemove = new List<Rectangle>();
 
-            heartTex = Content.Load<Texture2D>("Undertale");
-            titleTex = Content.Load<Texture2D>("titlenew");
-            titlePos = new Vector2(250, 0);
-           
-
-
-            for (int i = 0; i < 3; i++)
+            //========== Enemies ==========
+            Vector2 enemyPos = new Vector2(65, 100); 
+            enemyTex = Content.Load<Texture2D>("alien02_sprites"); 
+            enemyClass = new Enemy(enemyTex, (int)enemyPos.X, (int)enemyPos.Y);
+            enemyList = new List<Enemy>();
+             for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 5; j++)
                 {
@@ -99,13 +87,26 @@ namespace Space_Invaders
                 }
             }
 
+            //========== Player ==========
+            Texture2D playerTexture = Content.Load<Texture2D>("Ship_01-1");
+            Vector2 playerPos = new Vector2(300, 800);   
+            player = new Player(playerTexture, playerPos);
+
+            //========== Lives ==========
+            heartTex = Content.Load<Texture2D>("Undertale");
+
+            //========== Title ==========
+            titleTex = Content.Load<Texture2D>("titlenew");
+            titlePos = new Vector2(250, 0);
+
+            //========== Bullet ==========
             bulletTex = Content.Load<Texture2D>("bullet_1");
             bullet = new Bullet(bulletTex, playerPos);
             bulletList = new List<Bullet>();
             bulletList.Add(bullet);
             bullet.bulletUsed = true;
 
-            //score
+            //========== Score ==========
             scoreSpriteFont = Content.Load<SpriteFont>("Score");
             
 
@@ -115,19 +116,10 @@ namespace Space_Invaders
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
- 
-
-              
-
-            // TODO: Add your update logic here
 
             player.Update(Window.ClientBounds.Width);
 
-
-    
-
-
-
+            //========== Enemies ==========
             foreach (Enemy ene in enemyList)
             {
 
@@ -145,7 +137,6 @@ namespace Space_Invaders
                 }
 
             }
-
 
             foreach (Enemy ene in enemyList)
             {
@@ -173,6 +164,7 @@ namespace Space_Invaders
                 ene.Update();
             }
 
+            //========== Bullets ==========
             // remove inactive bullets
             bulletList.RemoveAll(b => b.bulletUsed == true);
 
@@ -190,6 +182,7 @@ namespace Space_Invaders
 
             }
 
+            //========== Lives ==========
             // lose one life when enemy reaches bottom
             foreach (Enemy ene in enemyList)
             {
@@ -221,6 +214,8 @@ namespace Space_Invaders
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
+
+            //========== Bullets ==========
             foreach (Bullet b in bulletList)
             {
                 if (b.bulletUsed == false)
@@ -229,7 +224,7 @@ namespace Space_Invaders
                 }
             }
 
-
+            //========== Enemies ==========
             foreach (Enemy ene in enemyList)
             {
                 if (ene.enemyIsAlive == true)
@@ -237,9 +232,11 @@ namespace Space_Invaders
                     ene.Draw(_spriteBatch);
                 }
             }
-           
+
+            //========== Player ==========
             player.Draw(_spriteBatch);
 
+            //========== Lives ==========
             for (int i = 0; i < Lives; i++)
             {
                 int scale = 4;
@@ -251,11 +248,14 @@ namespace Space_Invaders
                 _spriteBatch.Draw(titleTex, titlePos, Color.White);
             }
 
+            //========== Score ==========
             Vector2 scorePos = new Vector2(550, 10);
             if (score  > 0)
             {
                 _spriteBatch.DrawString(scoreSpriteFont, "Score: " + score, scorePos, Color.Black);
             }
+
+            //========== Window Title ==========
             Window.Title = "Space Invaders - Lives: " + Lives + " Score: " + score;
 
             _spriteBatch.End();
