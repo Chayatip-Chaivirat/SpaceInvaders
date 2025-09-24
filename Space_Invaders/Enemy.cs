@@ -25,7 +25,13 @@ namespace Space_Invaders
 
         public void Update()
         {
-           enemyHitBox.X = (int)enemyPos.X;
+            if (enemyIsAlive == false)
+            {
+                enemyHitBox.X = 0;
+                enemyHitBox.Y = 0;
+                return;
+            }
+            enemyHitBox.X = (int)enemyPos.X;
            enemyHitBox.Y = (int)enemyPos.Y;
            enemyHitBox.Width = enemyRec.Width;
            enemyHitBox.Height = enemyRec.Height;
@@ -41,6 +47,13 @@ namespace Space_Invaders
 
         public void Draw(SpriteBatch sb)
         {
+            sb.Draw(enemyTex, enemyHitBox, Color.Green * 0.5f);
+            //sb.Draw(enemyTex, enemyRec, Color.Blue * 0.5f);
+            if (enemyIsAlive == false)
+            {
+                return;
+            }
+
             sb.Draw(enemyTex, enemyPos, enemyRec, Color.White);
         }
     }

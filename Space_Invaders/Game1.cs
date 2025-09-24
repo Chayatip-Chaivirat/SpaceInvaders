@@ -14,11 +14,11 @@ namespace Space_Invaders
         KeyboardState previousKeyBoardState;
 
         //========== Enemy ==========
-        Enemy enemyClass;
-        List<Enemy> enemyList;
+        Enemy[,] enemyArray;
         Texture2D enemyTex;
+        Vector2 enemyPos = new Vector2(65, 100);
 
-        //========== Lives ==========
+        //========== Lives ========== 
         Texture2D heartTex;
         public int Lives = 5;
 
@@ -55,6 +55,8 @@ namespace Space_Invaders
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            
+
             _graphics.PreferredBackBufferWidth = 700;
             _graphics.PreferredBackBufferHeight = 950;
             _graphics.ApplyChanges();
@@ -71,19 +73,17 @@ namespace Space_Invaders
             itemToRemove = new List<Rectangle>();
 
             //========== Enemies ==========
-            Vector2 enemyPos = new Vector2(65, 100); 
             enemyTex = Content.Load<Texture2D>("alien02_sprites"); 
-            enemyClass = new Enemy(enemyTex, (int)enemyPos.X, (int)enemyPos.Y);
-            enemyList = new List<Enemy>();
-             for (int i = 0; i < 3; i++)
+            Enemy enemyClass = new Enemy(enemyTex, (int)enemyPos.X, (int)enemyPos.Y);
+            enemyArray = new Enemy[5, 5];
+             for (int i = 0; i < 5; i++)
             {
                 for (int j = 0; j < 5; j++)
                 {
                     int x = (int) enemyPos.X + j * 120;
                     int y = (int) enemyPos.Y + i * 100;
 
-                    Enemy ene = new Enemy(enemyTex, x, y);
-                    enemyList.Add(ene);
+                    enemyArray[i,j] = new Enemy(enemyTex, x, y);  
                 }
             }
 
@@ -120,9 +120,23 @@ namespace Space_Invaders
             player.Update(Window.ClientBounds.Width);
 
             //========== Enemies ==========
-            foreach (Enemy ene in enemyList)
-            {
 
+            // Check collision between bullets and enemies
+            foreach (Enemy ene in enemyArray)
+            {
+                //if (ene.enemyIsAlive == true)
+                //{
+                //    ene.Update();
+                //}
+                ene.Update();
+            }
+
+            foreach (Enemy ene in enemyArray)
+            {
+                if (enemyIsAlive == false)
+                {
+                    break; 
+                }
                 foreach (Bullet b in bulletList)
                 {
                     if (b.bulletHitBox.Intersects(ene.enemyHitBox))
@@ -130,6 +144,7 @@ namespace Space_Invaders
                         ene.enemyIsAlive = false;
                         b.bulletUsed = true;
                         itemToRemove.Add(ene.enemyHitBox);
+                        itemToRemove.Add(ene.enemyRec);
                         score += 1;
 
                     }
@@ -138,31 +153,16 @@ namespace Space_Invaders
 
             }
 
-            foreach (Enemy ene in enemyList)
-            {
-                if (ene.enemyIsAlive == false)
-                {
-                    itemToRemove.Add(ene.enemyRec);
-                }
-            }
+            // Redundance
+            //foreach (Enemy ene in enemyArray)
+            //{
+            //    if (ene.enemyIsAlive == false)
+            //    {
+            //        itemToRemove.Add(ene.enemyRec);
+            //    }
+            //}
 
-
-            // remove dead enemies
-            enemyList.RemoveAll(ene => ene.enemyIsAlive == false);
-
-            foreach (Bullet b in bulletList)
-            {
-                if (b.bulletPos.Y < 0)
-                {
-                    b.bulletUsed = true;
-                }
-                b.Update(player.pos1, gameTime);
-            }
-
-            foreach (Enemy ene in enemyList)
-            {
-                ene.Update();
-            }
+          
 
             //========== Bullets ==========
             // remove inactive bullets
@@ -181,10 +181,19 @@ namespace Space_Invaders
                 }
 
             }
+            
+            foreach (Bullet b in bulletList)
+            {
+                if (b.bulletPos.Y < 0)
+                {
+                    b.bulletUsed = true;
+                }
+                b.Update(player.pos1, gameTime);
+            }
 
             //========== Lives ==========
             // lose one life when enemy reaches bottom
-            foreach (Enemy ene in enemyList)
+            foreach (Enemy ene in enemyArray)
             {
                 if (ene.enemyPos.Y >= 750 - enemyTex.Height)
                 {
@@ -195,10 +204,11 @@ namespace Space_Invaders
                         itemToRemove.Add(ene.enemyRec);
                         itemToRemove.Add(ene.enemyHitBox);
                     }
-                    else
-                    {
-                        Exit();
-                    }
+                    // Kommenteras bort när man prov köra 
+                    //else
+                    //{
+                    //    Exit();
+                    //}
                 }
 
 
@@ -225,11 +235,13 @@ namespace Space_Invaders
             }
 
             //========== Enemies ==========
-            foreach (Enemy ene in enemyList)
+            for (int i = 0; i < enemyArray.GetLength(0); i++)
             {
-                if (ene.enemyIsAlive == true)
+                for (int j = 0; j < enemyArray.GetLength(1); j++)
                 {
-                    ene.Draw(_spriteBatch);
+                    int x = (int)enemyPos.X + j * 120;
+                    int y = (int)enemyPos.Y + i * 100;
+                    enemyArray[i,j].Draw(_spriteBatch);
                 }
             }
 
