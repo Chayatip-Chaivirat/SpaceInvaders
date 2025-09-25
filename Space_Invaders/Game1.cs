@@ -216,7 +216,7 @@ namespace Space_Invaders
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            //========== Bullet ==========
             _spriteBatch.Begin();
             foreach (Bullet b in bulletList)
             {
@@ -226,7 +226,7 @@ namespace Space_Invaders
                 }
             }
 
-
+            //========== Enemy ==========
             foreach (Enemy ene in enemyList)
             {
                 if (ene.enemyIsAlive == true)
@@ -234,9 +234,11 @@ namespace Space_Invaders
                     ene.Draw(_spriteBatch);
                 }
             }
-           
+
+            //========== Player ==========
             player.Draw(_spriteBatch);
 
+            //========== Lives ==========
             for (int i = 0; i < Lives; i++)
             {
                 int scale = 4;
@@ -248,6 +250,7 @@ namespace Space_Invaders
                 _spriteBatch.Draw(titleTex, titlePos, Color.White);
             }
 
+            //========== Score ==========
             Vector2 scorePos = new Vector2(550, 10);
             if (score  > 0)
             {
