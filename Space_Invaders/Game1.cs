@@ -38,10 +38,19 @@ namespace Space_Invaders
         Texture2D bulletTex;
         public bool bulletUsed = false;
         Bullet bullet;
+
         //========== Item to Remove ==========
         List<Rectangle> itemToRemove;
-       
 
+        //========== Game State ==========
+        GameState currentGameState;
+
+        public enum GameState
+        {
+            Start,
+            Playing,
+            GameOver
+        }
 
         public Game1()
         {
@@ -63,9 +72,12 @@ namespace Space_Invaders
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            //========== Game State ==========
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
 
             //========== Enemy ==========
-             Vector2 enemyPos = new Vector2(65, 100);
+            Vector2 enemyPos = new Vector2(65, 100);
             enemyTex = Content.Load<Texture2D>("alien02_sprites");
             enemyArray = new Enemy[5, 5];
 
@@ -105,38 +117,52 @@ namespace Space_Invaders
 
             //========== Score ==========
             scoreSpriteFont = Content.Load<SpriteFont>("Score");
-            
 
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
 
-            player.Update(Window.ClientBounds.Width);
+            //========== GameState ==========
+            if (currentGameState == GameState.Start)
+            {
+                if (keyBoardState.IsKeyDown(Keys.Enter)) // press enter to start
+                {
+                    currentGameState = GameState.Playing;
+                }
+            }
+
+            if (currentGameState == GameState.Playing)
+            {
+                // Playing state when lives > 0
+            }
+
+            if (currentGameState == GameState.GameOver)
+            {
+                // game over state when lives = 0, stop update, show score, restart?
+            }
 
 
             //========== Enemy ==========
             // Collision logic
             foreach (Enemy ene in enemyArray)
-            {
-
-                foreach (Bullet b in bulletList)
                 {
-                    if (ene.enemyIsAlive == true && b.bulletHitBox.Intersects(ene.enemyHitBox))
+
+                    foreach (Bullet b in bulletList)
                     {
-                        ene.enemyIsAlive = false;
-                        b.bulletUsed = true;
-                        itemToRemove.Add(ene.enemyHitBox);
-                        itemToRemove.Add(ene.enemyRec);
-                        score += 1;
+                        if (ene.enemyIsAlive == true && b.bulletHitBox.Intersects(ene.enemyHitBox))
+                        {
+                            ene.enemyIsAlive = false;
+                            b.bulletUsed = true;
+                            itemToRemove.Add(ene.enemyHitBox);
+                            itemToRemove.Add(ene.enemyRec);
+                            score += 1;
+
+                        }
 
                     }
 
                 }
-
-            }
 
             foreach (Enemy ene in enemyArray)
             {
@@ -201,8 +227,10 @@ namespace Space_Invaders
                     //}
                 }
 
+                //========== Player ==========
+                player.Update(Window.ClientBounds.Width);
 
-            base.Update(gameTime);
+                base.Update(gameTime);
             }
             
         }
