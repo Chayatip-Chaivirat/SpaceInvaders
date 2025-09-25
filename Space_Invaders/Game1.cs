@@ -16,6 +16,7 @@ namespace Space_Invaders
         //========== Enemy ==========
         Enemy[,] enemyArray;
         Texture2D enemyTex;
+        public bool enemyIsAlive = true;
 
         //========== Lives ==========
         Texture2D heartTex;
@@ -31,14 +32,12 @@ namespace Space_Invaders
 
         //========== Player ==========
         Player player;
-        public bool enemyIsAlive = true;
-        public bool bulletUsed = false;
-        Bullet bullet;
 
         //========== Bullet ==========
         List<Bullet> bulletList;
         Texture2D bulletTex;
-
+        public bool bulletUsed = false;
+        Bullet bullet;
         //========== Item to Remove ==========
         List<Rectangle> itemToRemove;
        
