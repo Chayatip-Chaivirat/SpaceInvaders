@@ -106,7 +106,7 @@ namespace Space_Invaders
             bulletList.Add(bullet);
             bullet.bulletUsed = true;
 
-            //score
+            //========== Score ==========
             scoreSpriteFont = Content.Load<SpriteFont>("Score");
             
 
@@ -116,19 +116,12 @@ namespace Space_Invaders
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
- 
-
-              
-
-            // TODO: Add your update logic here
 
             player.Update(Window.ClientBounds.Width);
 
 
-    
-
-
-
+            //========== Enemy ==========
+            // Collision logic
             foreach (Enemy ene in enemyList)
             {
 
@@ -147,7 +140,6 @@ namespace Space_Invaders
 
             }
 
-
             foreach (Enemy ene in enemyList)
             {
                 if (ene.enemyIsAlive == false)
@@ -156,9 +148,11 @@ namespace Space_Invaders
                 }
             }
 
-
             // remove dead enemies
             enemyList.RemoveAll(ene => ene.enemyIsAlive == false);
+
+            
+            //========== Bullet ==========
 
             foreach (Bullet b in bulletList)
             {
@@ -190,6 +184,8 @@ namespace Space_Invaders
                 }
 
             }
+
+            //========== Lives ==========
 
             // lose one life when enemy reaches bottom
             foreach (Enemy ene in enemyList)
