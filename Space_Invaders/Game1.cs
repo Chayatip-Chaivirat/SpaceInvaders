@@ -71,7 +71,7 @@ namespace Space_Invaders
             enemyArray = new Enemy[5, 5];
 
             for (int i = 0; i < 5; i++)
-            {
+             {
                 for (int j = 0; j < 5; j++)
                 {
                     int x = (int) enemyPos.X + j * 120;
@@ -130,6 +130,7 @@ namespace Space_Invaders
                         ene.enemyIsAlive = false;
                         b.bulletUsed = true;
                         itemToRemove.Add(ene.enemyHitBox);
+                        itemToRemove.Add(ene.enemyRec);
                         score += 1;
 
                     }
@@ -195,10 +196,10 @@ namespace Space_Invaders
                         itemToRemove.Add(ene.enemyRec);
                         itemToRemove.Add(ene.enemyHitBox);
                     }
-                    else
-                    {
-                        Exit();
-                    }
+                    //else
+                    //{
+                    //    Exit();
+                    //}
                 }
 
 
