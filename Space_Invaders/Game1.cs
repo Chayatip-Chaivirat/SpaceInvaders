@@ -125,7 +125,7 @@ namespace Space_Invaders
 
                 foreach (Bullet b in bulletList)
                 {
-                    if (b.bulletHitBox.Intersects(ene.enemyHitBox))
+                    if (ene.enemyIsAlive == true && b.bulletHitBox.Intersects(ene.enemyHitBox))
                     {
                         ene.enemyIsAlive = false;
                         b.bulletUsed = true;
