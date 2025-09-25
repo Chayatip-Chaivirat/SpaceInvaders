@@ -14,8 +14,7 @@ namespace Space_Invaders
         KeyboardState previousKeyBoardState;
 
         //========== Enemy ==========
-        Enemy enemyClass;
-        List<Enemy> enemyList;
+        Enemy[,] enemyArray;
         Texture2D enemyTex;
 
         //========== Lives ==========
@@ -69,10 +68,9 @@ namespace Space_Invaders
             //========== Enemy ==========
              Vector2 enemyPos = new Vector2(65, 100);
             enemyTex = Content.Load<Texture2D>("alien02_sprites");
-            enemyClass = new Enemy(enemyTex, (int)enemyPos.X, (int)enemyPos.Y);
-            enemyList = new List<Enemy>();
+            enemyArray = new Enemy[5, 5];
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 5; i++)
             {
                 for (int j = 0; j < 5; j++)
                 {
@@ -80,7 +78,7 @@ namespace Space_Invaders
                     int y = (int) enemyPos.Y + i * 100;
 
                     Enemy ene = new Enemy(enemyTex, x, y);
-                    enemyList.Add(ene);
+                    enemyArray[i, j] = new Enemy(enemyTex, x, y);
                 }
             }
 
@@ -122,7 +120,7 @@ namespace Space_Invaders
 
             //========== Enemy ==========
             // Collision logic
-            foreach (Enemy ene in enemyList)
+            foreach (Enemy ene in enemyArray)
             {
 
                 foreach (Bullet b in bulletList)
@@ -140,7 +138,7 @@ namespace Space_Invaders
 
             }
 
-            foreach (Enemy ene in enemyList)
+            foreach (Enemy ene in enemyArray)
             {
                 if (ene.enemyIsAlive == false)
                 {
@@ -148,8 +146,6 @@ namespace Space_Invaders
                 }
             }
 
-            // remove dead enemies
-            enemyList.RemoveAll(ene => ene.enemyIsAlive == false);
 
             
             //========== Bullet ==========
@@ -163,7 +159,7 @@ namespace Space_Invaders
                 b.Update(player.pos1, gameTime);
             }
 
-            foreach (Enemy ene in enemyList)
+            foreach (Enemy ene in enemyArray)
             {
                 ene.Update();
             }
@@ -188,7 +184,7 @@ namespace Space_Invaders
             //========== Lives ==========
 
             // lose one life when enemy reaches bottom
-            foreach (Enemy ene in enemyList)
+            foreach (Enemy ene in enemyArray)
             {
                 if (ene.enemyPos.Y >= 750 - enemyTex.Height)
                 {
@@ -227,7 +223,7 @@ namespace Space_Invaders
             }
 
             //========== Enemy ==========
-            foreach (Enemy ene in enemyList)
+            foreach (Enemy ene in enemyArray)
             {
                 if (ene.enemyIsAlive == true)
                 {
