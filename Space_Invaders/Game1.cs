@@ -66,26 +66,11 @@ namespace Space_Invaders
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Texture2D playerTexture = Content.Load<Texture2D>("Ship_01-1");
-            Vector2 playerPos = new Vector2(300, 800);
-            Vector2 enemyPos = new Vector2(65, 100);
+            //========== Enemy ==========
+             Vector2 enemyPos = new Vector2(65, 100);
             enemyTex = Content.Load<Texture2D>("alien02_sprites");
-            player = new Player(playerTexture, playerPos);
             enemyClass = new Enemy(enemyTex, (int)enemyPos.X, (int)enemyPos.Y);
-            
-
-            // TODO: use this.Content to load your game content here
-
-            
-            
             enemyList = new List<Enemy>();
-            itemToRemove = new List<Rectangle>();
-
-            heartTex = Content.Load<Texture2D>("Undertale");
-            titleTex = Content.Load<Texture2D>("titlenew");
-            titlePos = new Vector2(250, 0);
-           
-
 
             for (int i = 0; i < 3; i++)
             {
@@ -99,6 +84,22 @@ namespace Space_Invaders
                 }
             }
 
+            //========== Player ==========
+            Texture2D playerTexture = Content.Load<Texture2D>("Ship_01-1");
+            Vector2 playerPos = new Vector2(300, 800);
+            player = new Player(playerTexture, playerPos);
+
+            //========== itemToRemove ==========
+            itemToRemove = new List<Rectangle>();
+
+            //========== Heart ==========
+            heartTex = Content.Load<Texture2D>("Undertale");
+
+            //========== Title ==========
+            titleTex = Content.Load<Texture2D>("titlenew");
+            titlePos = new Vector2(250, 0);
+
+            //========== Bullet ==========
             bulletTex = Content.Load<Texture2D>("bullet_1");
             bullet = new Bullet(bulletTex, playerPos);
             bulletList = new List<Bullet>();
