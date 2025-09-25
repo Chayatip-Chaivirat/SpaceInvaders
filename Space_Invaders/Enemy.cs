@@ -12,6 +12,7 @@ namespace Space_Invaders
         public Rectangle enemyRec;
         public bool enemyIsAlive = true;
         public Rectangle enemyHitBox;
+        int speed = 1;
 
         public Enemy(Texture2D enemyTex, int x, int y )
         {
@@ -30,8 +31,21 @@ namespace Space_Invaders
            enemyHitBox.Width = enemyRec.Width;
            enemyHitBox.Height = enemyRec.Height;
 
-            // Go down to player 
+            bool movingRight = true;
+
             int stopY = 750 - enemyTex.Height;
+            int stopX = 950 - enemyTex.Width;
+
+            enemyPos.X += speed;
+
+            if ((int)enemyPos.X > stopX)
+            {
+                speed = -1;
+            }
+            if ((int)enemyPos.X < 0)
+                speed = 1;
+
+            // Go down to player 
             if ((int) enemyPos.Y < stopY)
             {
                 enemyPos.Y += 1;
