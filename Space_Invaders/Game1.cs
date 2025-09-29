@@ -10,7 +10,6 @@ namespace Space_Invaders
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        KeyboardState keyBoardState;
         KeyboardState previousKeyBoardState;
 
         //========== Enemy ==========
@@ -46,10 +45,21 @@ namespace Space_Invaders
         GameState currentGameState;
 
         //========== Start ==========
-        Start start;
-        Start startBackground;
+        public bool startButtonClicked = false;
+        Texture2D startBackgroundTex;
+        Vector2 startPositionBackground;
+
         Start startButton;
-        Start startSpriteSheet;
+        Vector2 startButtonPos;
+
+        Texture2D startSpriteSheetTex;
+        Vector2 startSpriteSheetPos;
+        Rectangle startSpriteSheetRec;
+        Point frameSize = new Point(100, 100);
+        Point currentFrame = new Point(0, 0);
+        Point sheetSize = new Point(3, 1);
+        int timeSinceLastFrame = 0;
+        int millisecondPerFrame = 50;
 
         public enum GameState
         {
@@ -125,47 +135,67 @@ namespace Space_Invaders
             scoreSpriteFont = Content.Load<SpriteFont>("Score");
 
             //========== Start ==========
-            Texture2D startBackgroundTex = Content.Load<Texture2D>("Arkadkabinett-1");
-            Vector2 startPositionBackground = new Vector2(0, 0);
-            startBackground = new Start(startBackgroundTex, (int) startPositionBackground.X, (int) startPositionBackground.Y);
+            if (currentGameState == GameState.Starting)
+            {
+                startBackgroundTex = Content.Load<Texture2D>("Arkadkabinett-1");
+                startPositionBackground = new Vector2(110, 130);
 
-            Texture2D startButtonTex = Content.Load<Texture2D>("Startknapp");
-            Vector2 startButtonPos = new Vector2(250, 400);
-            startButton = new Start(startButtonTex, (int)startButtonPos.X, (int)startButtonPos.Y);
+                Texture2D startButtonTex = Content.Load<Texture2D>("Startknapp");
+                Vector2 startButtonPos = new Vector2(250, 400);
+                startButton = new Start(startButtonTex, (int)startButtonPos.X, (int)startButtonPos.Y);
 
-            Texture2D startSpriteSheetTex = Content.Load<Texture2D>("alien02_sprites");
-            Vector2 startSpriteSheetPos = new Vector2(300, 200);
-            Rectangle startSpriteSheetRec = new Rectangle(0, 0, 100, 90);
-            startSpriteSheet = new Start(startSpriteSheetTex, (int)startSpriteSheetPos.X, (int)startSpriteSheetPos.Y);
-
+                startSpriteSheetTex = Content.Load<Texture2D>("alien02_sprites");
+                startSpriteSheetPos = new Vector2(260, 260);
+                startSpriteSheetRec = new Rectangle(0, 0, 100, 90);
+            }
         }
 
         protected override void Update(GameTime gameTime)
         {
-
             //========== GameState ==========
             if (currentGameState == GameState.Starting)
             {
-                if (keyBoardState.IsKeyDown(Keys.Enter)) // press enter to start
+                startButton.Clicked();
+
+                if (startButtonClicked == false)
                 {
-                    currentGameState = GameState.Playing;
+                    timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
+
+                    if (startButton.startButtonClicked)
+                    {
+                        currentGameState = GameState.Playing;
+                    }
+
+                    if (timeSinceLastFrame > millisecondPerFrame)
+                    {
+                        timeSinceLastFrame = 0;
+                    }
+
+                    // animation for alien on start screen
+                    ++currentFrame.X;
+                    if (currentFrame.X >= sheetSize.X)
+                    {
+                        currentFrame.X = 0;
+                        ++currentFrame.Y; 
+                        if (currentFrame.Y >= sheetSize.Y)
+                        { 
+                            currentFrame.Y = 0;
+                        }
+                    }
                 }
             }
 
             if (currentGameState == GameState.Playing)
             {
-                // Playing state when lives > 0
-            }
+                //========== Enemy ==========
+                // Update enemies
+                foreach (Enemy ene in enemyArray)
+                {
+                    ene.Update();
+                }
 
-            if (currentGameState == GameState.GameOver)
-            {
-                // game over state when lives = 0, stop update, show score, restart?
-            }
-
-
-            //========== Enemy ==========
-            // Collision logic
-            foreach (Enemy ene in enemyArray)
+                // Collision logic
+                foreach (Enemy ene in enemyArray)
                 {
 
                     foreach (Bullet b in bulletList)
@@ -184,73 +214,75 @@ namespace Space_Invaders
 
                 }
 
-            foreach (Enemy ene in enemyArray)
-            {
-                if (ene.enemyIsAlive == false)
+                foreach (Enemy ene in enemyArray)
                 {
-                    itemToRemove.Add(ene.enemyRec);
+                    if (ene.enemyIsAlive == false)
+                    {
+                        itemToRemove.Add(ene.enemyRec);
+                    }
+                } 
+
+                //========== Bullet ==========
+
+                foreach (Bullet b in bulletList)
+                {
+                    if (b.bulletPos.Y < 0)
+                    {
+                        b.bulletUsed = true;
+                    }
+                    b.Update(player.pos1, gameTime);
+                } 
+                // remove inactive bullets
+                bulletList.RemoveAll(b => b.bulletUsed == true);
+
+                if (Lives > 0)
+                {
+                    KeyboardState state = Keyboard.GetState();
+                    previousKeyBoardState = state;
+
+
+                    if (previousKeyBoardState.IsKeyDown(Keys.Space))
+                    {
+                        int max_bullets = 1;
+                        if (bulletList.Count < max_bullets) // only one bullet at a time
+                        {
+                            bulletList.Add(new Bullet(bulletTex, player.pos1));
+                        }
+
+                    }
                 }
-            }
+                
+                //========== Lives ==========
 
-
-            
-            //========== Bullet ==========
-
-            foreach (Bullet b in bulletList)
-            {
-                if (b.bulletPos.Y < 0)
+                // lose one life when enemy reaches bottom
+                foreach (Enemy ene in enemyArray)
                 {
-                    b.bulletUsed = true;
-                }
-                b.Update(player.pos1, gameTime);
-            }
+                    if (ene.enemyPos.Y >= 750 - enemyTex.Height)
+                    {
+                        if (Lives > 0)
+                        {
+                            Lives -= 1;
+                            ene.enemyIsAlive = false;
+                            itemToRemove.Add(ene.enemyRec);
+                            itemToRemove.Add(ene.enemyHitBox);
+                        }
+                    }
 
-            foreach (Enemy ene in enemyArray)
-            {
-                ene.Update();
-            }
-
-            // remove inactive bullets
-            bulletList.RemoveAll(b => b.bulletUsed == true);
-
-            KeyboardState state = Keyboard.GetState();
-            previousKeyBoardState = state;
-
-
-            if (previousKeyBoardState.IsKeyDown(Keys.Space))
-            {
-                int max_bullets = 1;
-                if (bulletList.Count < max_bullets) // only one bullet at a time
-                {
-                    bulletList.Add(new Bullet(bulletTex, player.pos1));
-                }
-
-            }
-
-            //========== Lives ==========
-
-            // lose one life when enemy reaches bottom
-            foreach (Enemy ene in enemyArray)
-            {
-                if (ene.enemyPos.Y >= 750 - enemyTex.Height)
-                {
+                    //========== Player ==========
                     if (Lives > 0)
                     {
-                        Lives -= 1;
-                        ene.enemyIsAlive = false;
-                        itemToRemove.Add(ene.enemyRec);
-                        itemToRemove.Add(ene.enemyHitBox);
+                        player.Update(Window.ClientBounds.Width);
                     }
-                    //else
-                    //{
-                    //    Exit();
-                    //}
-                }
+                    
+                
+            }
 
-                //========== Player ==========
-                player.Update(Window.ClientBounds.Width);
-
-                base.Update(gameTime);
+            if (currentGameState == GameState.GameOver && Lives <= 0)
+            {
+               
+            }
+            
+            //Update(gameTime);
             }
             
         }
@@ -305,12 +337,15 @@ namespace Space_Invaders
             Window.Title = "Space Invaders - Lives: " + Lives + " Score: " + score;
 
             //========== Start ==========
-            if currentGameState == GameState.Starting;
+
+            if ( currentGameState == GameState.Starting)
             {
-                start.Draw(_spriteBatch);
+             _spriteBatch.Draw(startBackgroundTex, startPositionBackground, Color.White); // start background
+             startButton.Draw(_spriteBatch); // start button
+             _spriteBatch.Draw(startSpriteSheetTex, startSpriteSheetPos, startSpriteSheetRec , Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0); // alien animation on start screen
 
             }
-            
+           
 
             _spriteBatch.End();
 

@@ -25,17 +25,21 @@ namespace Space_Invaders
 
         public void Update()
         {
-           enemyHitBox.X = (int)enemyPos.X;
-           enemyHitBox.Y = (int)enemyPos.Y;
-           enemyHitBox.Width = enemyRec.Width;
-           enemyHitBox.Height = enemyRec.Height;
-
-            // Go down to player 
-            int stopY = 750 - enemyTex.Height;
-            if ((int) enemyPos.Y < stopY)
+            if (enemyIsAlive == true)
             {
-                enemyPos.Y += 1;
+                enemyHitBox.X = (int)enemyPos.X;
+                enemyHitBox.Y = (int)enemyPos.Y;
+                enemyHitBox.Width = enemyRec.Width;
+                enemyHitBox.Height = enemyRec.Height;
+
+                // Go down to player 
+                int stopY = 750 - enemyTex.Height;
+                if ((int) enemyPos.Y < stopY)
+                {
+                    enemyPos.Y += 1;
+                }
             }
+           
 
         }
 

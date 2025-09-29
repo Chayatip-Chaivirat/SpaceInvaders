@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -7,15 +6,28 @@ namespace Space_Invaders
 {
     internal class Start
     {
-        Texture2D backgroundPicture;
-        Rectangle sourceRec;
+        Texture2D startButtonTex;
         Vector2 position;
+        public bool startButtonClicked = false;
+        Rectangle startButtonRec;
 
-        public Start(Texture2D backgroundPicture, int x, int y)
+        public Start(Texture2D startButtonTex, int x, int y)
         {
-            this.backgroundPicture = backgroundPicture;
+            this.startButtonTex = startButtonTex;
             this.position = new Vector2(x, y);
-            this.sourceRec = new Rectangle(0, 0, 100, 90);
+            this.startButtonRec = new Rectangle(x,y, startButtonTex.Width, startButtonTex.Height);
+        }
+
+        public void Clicked()
+        {
+            if (Mouse.GetState().LeftButton == ButtonState.Pressed && startButtonRec.Contains(Mouse.GetState().Position))
+            {
+                // Click to start the game and remove the start screen
+                this.startButtonTex = null;
+                this.startButtonRec = Rectangle.Empty;
+                startButtonClicked = true;
+
+            }
         }
 
         public void Update()
@@ -25,7 +37,11 @@ namespace Space_Invaders
 
         public void Draw(SpriteBatch sb)
         {
-            sb.Draw(backgroundPicture, position, sourceRec, Color.White);
+            if (startButtonTex != null)
+            {
+                sb.Draw(startButtonTex, position, Color.White);
+            }
+                
         }
     }
 }
