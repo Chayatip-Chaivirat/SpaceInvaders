@@ -46,12 +46,14 @@ namespace Space_Invaders
         GameState currentGameState;
 
         //========== Start ==========
+        Start start;
         Start startBackground;
+        Start startButton;
         Start startSpriteSheet;
 
         public enum GameState
         {
-            Start,
+            Starting,
             Playing,
             GameOver
         }
@@ -127,9 +129,14 @@ namespace Space_Invaders
             Vector2 startPositionBackground = new Vector2(0, 0);
             startBackground = new Start(startBackgroundTex, (int) startPositionBackground.X, (int) startPositionBackground.Y);
 
-            Texture2D startSpriteSheetTex = Content.Load<Texture2D>("Startknapp");
-            Vector2 startPostionSpriteSheet = new Vector2(250, 400);
-            startSpriteSheet = new Start(startSpriteSheetTex, (int)startPostionSpriteSheet.X, (int)startPostionSpriteSheet.Y);
+            Texture2D startButtonTex = Content.Load<Texture2D>("Startknapp");
+            Vector2 startButtonPos = new Vector2(250, 400);
+            startButton = new Start(startButtonTex, (int)startButtonPos.X, (int)startButtonPos.Y);
+
+            Texture2D startSpriteSheetTex = Content.Load<Texture2D>("alien02_sprites");
+            Vector2 startSpriteSheetPos = new Vector2(300, 200);
+            Rectangle startSpriteSheetRec = new Rectangle(0, 0, 100, 90);
+            startSpriteSheet = new Start(startSpriteSheetTex, (int)startSpriteSheetPos.X, (int)startSpriteSheetPos.Y);
 
         }
 
@@ -137,7 +144,7 @@ namespace Space_Invaders
         {
 
             //========== GameState ==========
-            if (currentGameState == GameState.Start)
+            if (currentGameState == GameState.Starting)
             {
                 if (keyBoardState.IsKeyDown(Keys.Enter)) // press enter to start
                 {
@@ -296,6 +303,14 @@ namespace Space_Invaders
                 _spriteBatch.DrawString(scoreSpriteFont, "Score: " + score, scorePos, Color.Black);
             }
             Window.Title = "Space Invaders - Lives: " + Lives + " Score: " + score;
+
+            //========== Start ==========
+            if currentGameState == GameState.Starting;
+            {
+                start.Draw(_spriteBatch);
+
+            }
+            
 
             _spriteBatch.End();
 

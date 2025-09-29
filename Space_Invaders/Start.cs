@@ -8,7 +8,6 @@ namespace Space_Invaders
     internal class Start
     {
         Texture2D backgroundPicture;
-        Texture2D spriteSheet;
         Rectangle sourceRec;
         Vector2 position;
 
@@ -16,9 +15,9 @@ namespace Space_Invaders
         {
             this.backgroundPicture = backgroundPicture;
             this.position = new Vector2(x, y);
-            this.spriteSheet = spriteSheet;
-            this.sourceRec = sourceRec;
+            this.sourceRec = new Rectangle(0, 0, 100, 90);
         }
+
         public void Update()
         {
             // Any update logic for the start screen can go here
@@ -27,7 +26,6 @@ namespace Space_Invaders
         public void Draw(SpriteBatch sb)
         {
             sb.Draw(backgroundPicture, position, sourceRec, Color.White);
-            sb.Draw(spriteSheet, position, sourceRec, Color.White);
         }
     }
 }
