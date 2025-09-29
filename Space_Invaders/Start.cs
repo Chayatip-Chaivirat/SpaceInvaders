@@ -12,10 +12,10 @@ namespace Space_Invaders
         Rectangle sourceRec;
         Vector2 position;
 
-        public void StartBackground(Texture2D backgroundPicture, Texture2D spriteSheet, Vector2 position, Rectangle sourceRec)
+        public Start(Texture2D backgroundPicture, int x, int y)
         {
             this.backgroundPicture = backgroundPicture;
-            this.position = position;
+            this.position = new Vector2(x, y);
             this.spriteSheet = spriteSheet;
             this.sourceRec = sourceRec;
         }

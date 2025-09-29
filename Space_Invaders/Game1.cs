@@ -45,6 +45,10 @@ namespace Space_Invaders
         //========== Game State ==========
         GameState currentGameState;
 
+        //========== Start ==========
+        Start startBackground;
+        Start startSpriteSheet;
+
         public enum GameState
         {
             Start,
@@ -117,6 +121,15 @@ namespace Space_Invaders
 
             //========== Score ==========
             scoreSpriteFont = Content.Load<SpriteFont>("Score");
+
+            //========== Start ==========
+            Texture2D startBackgroundTex = Content.Load<Texture2D>("Arkadkabinett-1");
+            Vector2 startPositionBackground = new Vector2(0, 0);
+            startBackground = new Start(startBackgroundTex, (int) startPositionBackground.X, (int) startPositionBackground.Y);
+
+            Texture2D startSpriteSheetTex = Content.Load<Texture2D>("Startknapp");
+            Vector2 startPostionSpriteSheet = new Vector2(250, 400);
+            startSpriteSheet = new Start(startSpriteSheetTex, (int)startPostionSpriteSheet.X, (int)startPostionSpriteSheet.Y);
 
         }
 
