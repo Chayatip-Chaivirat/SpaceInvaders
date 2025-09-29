@@ -72,7 +72,7 @@ namespace Space_Invaders
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            //========== Game State ==========
+            
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
@@ -271,8 +271,10 @@ namespace Space_Invaders
                 int x = 10 + i * (w + 5);
                 int y = 10;
                 _spriteBatch.Draw(heartTex, new Rectangle(x, y, w, h), Color.White); /// draw texture
-                _spriteBatch.Draw(titleTex, titlePos, Color.White);
             }
+
+            //========== Title ==========
+            _spriteBatch.Draw(titleTex, titlePos, Color.White);
 
             //========== Score ==========
             Vector2 scorePos = new Vector2(550, 10);

@@ -20,7 +20,7 @@ internal class Player
    
 
     Rectangle startpos = new Rectangle(0, 0, 32, 32);
-    int speed = 100;
+    int speed = 15;
 
 
     public void Update(int windowWidth)
