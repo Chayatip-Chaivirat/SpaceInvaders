@@ -117,6 +117,29 @@ namespace Space_Invaders
 
             player.Update(Window.ClientBounds.Width);
 
+            bool hitWall = false;
+
+            foreach (Enemy ene in enemyArray)
+            {
+                if (ene.enemyIsAlive)
+                {
+                    ene.Update();
+
+                    if (ene.enemyPos.X <= 0 || ene.enemyPos.X >= 950 - enemyTex.Width)
+                    {
+                        hitWall = true;
+                    }
+                }
+            }
+
+            if (hitWall)
+            {
+                foreach (Enemy ene in enemyArray)
+                {
+                    ene.MoveDown();
+                }
+            }
+
 
             //========== Enemy ==========
             // Collision logic

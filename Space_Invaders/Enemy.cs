@@ -12,7 +12,9 @@ namespace Space_Invaders
         public Rectangle enemyRec;
         public bool enemyIsAlive = true;
         public Rectangle enemyHitBox;
-        int speed = 1;
+       
+        public static int speed = 1;
+        public static int moveDown = 20;
 
         public Enemy(Texture2D enemyTex, int x, int y )
         {
@@ -26,32 +28,48 @@ namespace Space_Invaders
 
         public void Update()
         {
-           enemyHitBox.X = (int)enemyPos.X;
-           enemyHitBox.Y = (int)enemyPos.Y;
-           enemyHitBox.Width = enemyRec.Width;
-           enemyHitBox.Height = enemyRec.Height;
-
-            bool movingRight = true;
-
-            int stopY = 750 - enemyTex.Height;
-            int stopX = 950 - enemyTex.Width;
 
             enemyPos.X += speed;
 
-            if ((int)enemyPos.X > stopX)
+            if (enemyPos.X <= 0 || enemyPos.X >= 950 - enemyTex.Width)
             {
-                speed = -1;
-            }
-            if ((int)enemyPos.X < 0)
-                speed = 1;
-
-            // Go down to player 
-            if ((int) enemyPos.Y < stopY)
-            {
-                enemyPos.Y += 1;
+                speed *= -1;
+               
             }
 
+            enemyHitBox.X = (int)enemyPos.X;
+            enemyHitBox.Y = (int)enemyPos.Y;
+            enemyHitBox.Width = enemyRec.Width;
+            enemyHitBox.Height = enemyRec.Height;
+            
         }
+
+            public void MoveDown()
+            {
+                enemyPos.Y += moveDown;
+        }
+
+
+
+            //bool movingRight = true;
+
+            //int stopY = 750 - enemyTex.Height;
+            //int stopX = 950 - enemyTex.Width;
+
+            //enemyPos.X += speed;
+
+            //if ((int)enemyPos.X > stopX)
+            //{
+            //    speed = -1;
+            //}
+            //if ((int)enemyPos.X < 0)
+            //    speed = 1;
+
+            //{
+            //    enemyPos.Y += 1;
+            //}
+
+        
 
         public void Draw(SpriteBatch sb)
         {
