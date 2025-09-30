@@ -182,6 +182,9 @@ namespace Space_Invaders
                             currentFrame.Y = 0;
                         }
                     }
+
+                    // Update the source rectangle to draw the current frame
+                    startSpriteSheetRec = new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y);
                 }
             }
 
@@ -255,14 +258,17 @@ namespace Space_Invaders
                 //========== Lives ==========
 
                 // lose one life when enemy reaches bottom
+                int screenHeight = Window.ClientBounds.Height;
+
                 foreach (Enemy ene in enemyArray)
                 {
-                    if (ene.enemyPos.Y >= 750 - enemyTex.Height)
+                    if (ene.lifeLost == false && ene.enemyIsAlive == true && ene.enemyHitBox.Bottom >= screenHeight - 300)
                     {
                         if (Lives > 0)
                         {
                             Lives -= 1;
                             ene.enemyIsAlive = false;
+                            ene.lifeLost = true;
                             itemToRemove.Add(ene.enemyRec);
                             itemToRemove.Add(ene.enemyHitBox);
                         }

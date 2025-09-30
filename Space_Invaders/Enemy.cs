@@ -12,6 +12,7 @@ namespace Space_Invaders
         public Rectangle enemyRec;
         public bool enemyIsAlive = true;
         public Rectangle enemyHitBox;
+        public bool lifeLost = false;
 
         public Enemy(Texture2D enemyTex, int x, int y )
         {
@@ -36,7 +37,7 @@ namespace Space_Invaders
                 int stopY = 750 - enemyTex.Height;
                 if ((int) enemyPos.Y < stopY)
                 {
-                    enemyPos.Y += 1;
+                    enemyPos.Y += 1f;
                 }
             }
            
