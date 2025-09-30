@@ -34,7 +34,7 @@ namespace Space_Invaders
                 enemyHitBox.Height = enemyRec.Height;
 
                 // Go down to player 
-                int stopY = 750 - enemyTex.Height;
+                int stopY = 800 - enemyTex.Height;
                 if ((int) enemyPos.Y < stopY)
                 {
                     enemyPos.Y += 1f;

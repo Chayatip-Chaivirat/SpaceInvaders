@@ -30,11 +30,6 @@ namespace Space_Invaders
             }
         }
 
-        public void Update()
-        {
-            // Any update logic for the start screen can go here
-        }
-
         public void Draw(SpriteBatch sb)
         {
             if (startButtonTex != null)

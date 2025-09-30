@@ -16,6 +16,7 @@ namespace Space_Invaders
         Enemy[,] enemyArray;
         Texture2D enemyTex;
         public bool enemyIsAlive = true;
+        Vector2 enemyPos;
 
         //========== Lives ==========
         Texture2D heartTex;
@@ -61,6 +62,19 @@ namespace Space_Invaders
         int timeSinceLastFrame = 0;
         int millisecondPerFrame = 50;
 
+        //========== Gameover ==========
+        Texture2D gameOverBackgroundTex;
+        Vector2 gameOverBackgroundPos;
+
+        GameoverState gameOverSpriteExplosion;
+        Texture2D gameOverSpriteExplosionTex;
+        Vector2 gameOverSpriteExplosionPos;
+        Rectangle gameOverSpriteExplosionRec;
+
+        GameoverState gameOverSpriteStar;
+        Texture2D gameOverSpriteStarTex;
+        Vector2 gameOverSpriteStarPos;
+        Rectangle gameOverSpriteStarRec;
         public enum GameState
         {
             Starting,
@@ -93,7 +107,7 @@ namespace Space_Invaders
                 Exit();
 
             //========== Enemy ==========
-            Vector2 enemyPos = new Vector2(65, 100);
+            enemyPos = new Vector2(65, 100);
             enemyTex = Content.Load<Texture2D>("alien02_sprites");
             enemyArray = new Enemy[5, 5];
 
@@ -141,19 +155,32 @@ namespace Space_Invaders
                 startPositionBackground = new Vector2(110, 130);
 
                 Texture2D startButtonTex = Content.Load<Texture2D>("Startknapp");
-                Vector2 startButtonPos = new Vector2(250, 400);
+                startButtonPos = new Vector2(250, 400);
                 startButton = new Start(startButtonTex, (int)startButtonPos.X, (int)startButtonPos.Y);
 
                 startSpriteSheetTex = Content.Load<Texture2D>("alien02_sprites");
                 startSpriteSheetPos = new Vector2(260, 260);
                 startSpriteSheetRec = new Rectangle(0, 0, 100, 90);
             }
+
+            //========== Gameover ==========
+                gameOverBackgroundTex = Content.Load<Texture2D>("game_over-2");
+                gameOverBackgroundPos = new Vector2(90, 150);
+
+                Texture2D gameOverSpriteExplosionTex = Content.Load<Texture2D>("explotion01_sprites");
+                gameOverSpriteExplosionPos = new Vector2(150, 200);
+                gameOverSpriteExplosion = new GameoverState(gameOverSpriteExplosionTex, gameOverSpriteExplosionPos);
+
+                Texture2D gameOverSpriteStarTex = Content.Load<Texture2D>("star_01");
+                gameOverSpriteStarPos = new Vector2(160, 200);
+                gameOverSpriteStar = new GameoverState(gameOverSpriteStarTex,gameOverSpriteStarPos);
+
         }
 
         protected override void Update(GameTime gameTime)
         {
             //========== GameState ==========
-            if (currentGameState == GameState.Starting)
+            if (currentGameState == GameState.Starting) // start screen
             {
                 startButton.Clicked();
 
@@ -188,7 +215,7 @@ namespace Space_Invaders
                 }
             }
 
-            if (currentGameState == GameState.Playing)
+            if (currentGameState == GameState.Playing) // main game
             {
                 //========== Enemy ==========
                 // Update enemies
@@ -197,8 +224,18 @@ namespace Space_Invaders
                     ene.Update();
                 }
 
-                // Collision logic
+                bool noEnemyLeftInArray = true;
                 foreach (Enemy ene in enemyArray)
+                {
+                    if (ene.enemyIsAlive == true)
+                        {
+                            noEnemyLeftInArray = false;
+                            break;
+                        }
+                }
+
+                    // Collision logic
+                    foreach (Enemy ene in enemyArray)
                 {
 
                     foreach (Bullet b in bulletList)
@@ -254,15 +291,16 @@ namespace Space_Invaders
 
                     }
                 }
-                
+
                 //========== Lives ==========
 
                 // lose one life when enemy reaches bottom
                 int screenHeight = Window.ClientBounds.Height;
+                int stopY = screenHeight - enemyTex.Height;
 
                 foreach (Enemy ene in enemyArray)
                 {
-                    if (ene.lifeLost == false && ene.enemyIsAlive == true && ene.enemyHitBox.Bottom >= screenHeight - 300)
+                    if (ene.lifeLost == false && ene.enemyIsAlive == true && ene.enemyHitBox.Bottom >= screenHeight - 200)
                     {
                         if (Lives > 0)
                         {
@@ -280,15 +318,19 @@ namespace Space_Invaders
                         player.Update(Window.ClientBounds.Width);
                     }
                     
-                
-            }
+                    if (Lives <= 0 || noEnemyLeftInArray == true) // switch to game over state when no lives left OR no enemies left
+                    {
+                        currentGameState = GameState.GameOver;
+                    } 
+                }
 
-            if (currentGameState == GameState.GameOver && Lives <= 0)
-            {
-               
+            if (currentGameState == GameState.GameOver) // game over screen
+                {
+               if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                    {
+                        currentGameState = GameState.Starting;
+                    }
             }
-            
-            //Update(gameTime);
             }
             
         }
@@ -351,7 +393,15 @@ namespace Space_Invaders
              _spriteBatch.Draw(startSpriteSheetTex, startSpriteSheetPos, startSpriteSheetRec , Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0); // alien animation on start screen
 
             }
-           
+
+            //========== Gameover ==========
+            if (currentGameState == GameState.GameOver)
+            {
+                _spriteBatch.Draw(gameOverBackgroundTex, gameOverBackgroundPos, Color.Black); // game over background
+                gameOverSpriteExplosion.Draw(_spriteBatch); // explosion animation
+                gameOverSpriteStar.Draw(_spriteBatch); // star animation
+            }
+
 
             _spriteBatch.End();
 
