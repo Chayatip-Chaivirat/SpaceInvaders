@@ -180,7 +180,12 @@ namespace Space_Invaders
         protected override void Update(GameTime gameTime)
         {
             //========== GameState ==========
-            if (currentGameState == GameState.Starting) // start screen
+
+            //==============================
+            //          Start Screen
+            //==============================
+
+            if (currentGameState == GameState.Starting) 
             {
                 startButton.Clicked();
 
@@ -215,7 +220,11 @@ namespace Space_Invaders
                 }
             }
 
-            if (currentGameState == GameState.Playing) // main game
+            //==============================
+            //          Main Game
+            //==============================
+
+            if (currentGameState == GameState.Playing)
             {
                 //========== Enemy ==========
                 // Update enemies
@@ -324,13 +333,22 @@ namespace Space_Invaders
                     } 
                 }
 
-            if (currentGameState == GameState.GameOver) // game over screen
+                //==============================
+                //        Game Over Screen
+                //==============================
+
+                if (currentGameState == GameState.GameOver)  
                 {
-               if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                    gameOverSpriteStar.Update(gameTime);
+                    gameOverSpriteExplosion.Update(gameTime);
+
+                    // switch to start screen when pressing Enter or Space
+                    KeyboardState state = Keyboard.GetState();
+                    if (previousKeyBoardState.IsKeyUp(Keys.Enter) && previousKeyBoardState.IsKeyDown(Keys.Enter) || previousKeyBoardState.IsKeyUp(Keys.Space) && previousKeyBoardState.IsKeyDown(Keys.Space)) // not working
                     {
                         currentGameState = GameState.Starting;
                     }
-            }
+                }
             }
             
         }
