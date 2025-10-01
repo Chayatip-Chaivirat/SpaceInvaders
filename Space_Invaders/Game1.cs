@@ -19,6 +19,10 @@ namespace Space_Invaders
         public bool enemyIsAlive = true;
         Vector2 enemyPos;
 
+        Enemy[,] enemySpaceShipArray;
+        Texture2D enemySpaceShipTex;
+        Vector2 enemySpaceShipPos;
+
         //========== Lives ==========
         Texture2D heartTex;
         public int Lives = 5;
@@ -115,22 +119,69 @@ namespace Space_Invaders
             //========== Enemy ==========
             enemyPos = new Vector2(65, 100);
             enemyTex = Content.Load<Texture2D>("alien02_sprites");
-            enemyArray = new Enemy[5, 5];
 
-            for (int i = 0; i < 5; i++)
-             {
+            enemySpaceShipTex = Content.Load<Texture2D>("alien03_sprites");
+            enemySpaceShipPos = new Vector2(65, 200);
+
+            int enemyRows = 3;
+            int enemySpaceShipRows = 2;
+
+            //enemyArray = new Enemy[enemyRows, 5];
+
+            //for (int i = 0; i < enemyRows; i++)
+            // {
+            //    for (int j = 0; j < 5; j++)
+            //    {
+            //        int x = (int) enemyPos.X + j * 120;
+            //        int y = (int) enemyPos.Y + i * 100;
+
+            //        Enemy ene = new Enemy(enemyTex, x, y);
+            //        enemyArray[i, j] = new Enemy(enemyTex, x, y);
+            //    }
+            //}
+
+            //enemySpaceShipArray = new Enemy[enemySpaceShipRows, 5];
+
+            //for (int i = enemyRows; i < enemySpaceShipRows + enemyRows; i++)
+            //{
+            //    for (int j = 0; j < 5; j++)
+            //    {
+            //        int x = (int)enemySpaceShipPos.X + j * 120;
+            //        int y = (int)enemySpaceShipPos.Y + i * 100;
+
+            //        Enemy ene = new Enemy(enemySpaceShipTex, x, y);
+            //        enemySpaceShipArray[i, j] = new Enemy(enemySpaceShipTex, x, y);
+            //    }
+            //}
+
+            enemyArray = new Enemy[5,5];
+            for (int i = 0; i < enemyRows; i++)
+            {
                 for (int j = 0; j < 5; j++)
                 {
-                    int x = (int) enemyPos.X + j * 120;
-                    int y = (int) enemyPos.Y + i * 100;
+                    int x = (int)enemyPos.X + j * 120;
+                    int y = (int)enemyPos.Y + i * 100;
 
                     Enemy ene = new Enemy(enemyTex, x, y);
                     enemyArray[i, j] = new Enemy(enemyTex, x, y);
                 }
             }
+            for (int i = enemyRows; i < enemySpaceShipRows + enemyRows; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    int x = (int)enemyPos.X + j * 120;
+                    int y = (int)enemyPos.Y + i * 100;
+                    Enemy ene = new Enemy(enemySpaceShipTex, x, y);
+                    enemyArray[i, j] = new Enemy(enemySpaceShipTex, x, y);
+                }
+            }
 
-            //========== Player ==========
-            Texture2D playerTexture = Content.Load<Texture2D>("Ship_01-1");
+
+
+
+                //========== Player ==========
+                Texture2D playerTexture = Content.Load<Texture2D>("Ship_01-1");
             Vector2 playerPos = new Vector2(300, 800);
             player = new Player(playerTexture, playerPos);
 
@@ -283,23 +334,23 @@ namespace Space_Invaders
 
                     // Collision logic
                     foreach (Enemy ene in enemyArray)
-                {
-
-                    foreach (Bullet b in bulletList)
                     {
-                        if (ene.enemyIsAlive == true && b.bulletHitBox.Intersects(ene.enemyHitBox))
+                        foreach (Bullet b in bulletList)
                         {
-                            ene.enemyIsAlive = false;
-                            b.bulletUsed = true;
-                            itemToRemove.Add(ene.enemyHitBox);
-                            itemToRemove.Add(ene.enemyRec);
-                            score += 1;
-
+                            if (ene.enemyIsAlive == true && b.bulletHitBox.Intersects(ene.enemyHitBox))
+                            {
+                                ene.enemyIsAlive = false;
+                                b.bulletUsed = true;
+                                itemToRemove.Add(ene.enemyHitBox);
+                                itemToRemove.Add(ene.enemyRec);
+                                score += 1;
+                                if (enemyTex == enemySpaceShipTex)
+                                {
+                                    score += 2;
+                                }
                         }
-
+                        }
                     }
-
-                }
 
                 foreach (Enemy ene in enemyArray)
                 {
@@ -307,7 +358,66 @@ namespace Space_Invaders
                     {
                         itemToRemove.Add(ene.enemyRec);
                     }
-                } 
+                }
+
+                //// enemy spaceship
+                //foreach (Enemy ene in enemySpaceShipArray)
+                //{
+                //    if (ene.enemyIsAlive)
+                //    {
+                //        ene.Update();
+
+                //        if (ene.enemyPos.X <= 0 || ene.enemyPos.X >= 950 - enemyTex.Width)
+                //        {
+                //            hitWall = true;
+                //        }
+                //    }
+                //}
+
+                //if (hitWall)
+                //{
+                //    foreach (Enemy ene in enemySpaceShipArray)
+                //    {
+                //        ene.MoveDown();
+                //    }
+                //}
+
+                //foreach (Enemy ene in enemySpaceShipArray)
+                //{
+                //    if (ene.enemyIsAlive == true)
+                //    {
+                //        noEnemyLeftInArray = false;
+                //        break;
+                //    }
+                //}
+
+                //// Collision logic
+                //foreach (Enemy ene in enemySpaceShipArray)
+                //{
+
+                //    foreach (Bullet b in bulletList)
+                //    {
+                //        if (ene.enemyIsAlive == true && b.bulletHitBox.Intersects(ene.enemyHitBox))
+                //        {
+                //            ene.enemyIsAlive = false;
+                //            b.bulletUsed = true;
+                //            itemToRemove.Add(ene.enemyHitBox);
+                //            itemToRemove.Add(ene.enemyRec);
+                //            score += 2;
+
+                //        }
+
+                //    }
+
+                //}
+
+                //foreach (Enemy ene in enemySpaceShipArray)
+                //{
+                //    if (ene.enemyIsAlive == false)
+                //    {
+                //        itemToRemove.Add(ene.enemyRec);
+                //    }
+                //}
 
                 //========== Bullet ==========
 
@@ -417,6 +527,14 @@ namespace Space_Invaders
                     ene.Draw(_spriteBatch);
                 }
             }
+
+            //foreach (Enemy ene in enemySpaceShipArray)
+            //{
+            //    if (ene.enemyIsAlive == true)
+            //    {
+            //        ene.Draw(_spriteBatch);
+            //    }
+            //}
 
             //========== Player ==========
             player.Draw(_spriteBatch);
