@@ -201,65 +201,42 @@ namespace Space_Invaders
             //          Start Screen
             //==============================
 
-            if (currentGameState == GameState.Starting) 
-            bool hitWall = false;
-
-            foreach (Enemy ene in enemyArray)
+            if (currentGameState == GameState.Starting)
             {
-                if (ene.enemyIsAlive)
-                {
-                    ene.Update();
-
-                    if (ene.enemyPos.X <= 0 || ene.enemyPos.X >= 950 - enemyTex.Width)
-                    {
-                        hitWall = true;
-                    }
-                }
-            }
-
-            if (hitWall)
-            {
+                //========== Enemy ==========
                 foreach (Enemy ene in enemyArray)
                 {
-                    ene.MoveDown();
-                }
-            }
+                    startButton.Clicked();
 
-
-            //========== Enemy ==========
-            // Collision logic
-            foreach (Enemy ene in enemyArray)
-            {
-                startButton.Clicked();
-
-                if (startButtonClicked == false)
-                {
-                    timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
-
-                    if (startButton.startButtonClicked)
+                    if (startButtonClicked == false)
                     {
-                        currentGameState = GameState.Playing;
-                    }
+                        timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
 
-                    if (timeSinceLastFrame > millisecondPerFrame)
-                    {
-                        timeSinceLastFrame = 0;
-                    }
-
-                    // animation for alien on start screen
-                    ++currentFrame.X;
-                    if (currentFrame.X >= sheetSize.X)
-                    {
-                        currentFrame.X = 0;
-                        ++currentFrame.Y; 
-                        if (currentFrame.Y >= sheetSize.Y)
-                        { 
-                            currentFrame.Y = 0;
+                        if (startButton.startButtonClicked)
+                        {
+                            currentGameState = GameState.Playing;
                         }
-                    }
 
-                    // Update the source rectangle to draw the current frame
-                    startSpriteSheetRec = new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y);
+                        if (timeSinceLastFrame > millisecondPerFrame)
+                        {
+                            timeSinceLastFrame = 0;
+                        }
+
+                        // animation for alien on start screen
+                        ++currentFrame.X;
+                        if (currentFrame.X >= sheetSize.X)
+                        {
+                            currentFrame.X = 0;
+                            ++currentFrame.Y;
+                            if (currentFrame.Y >= sheetSize.Y)
+                            {
+                                currentFrame.Y = 0;
+                            }
+                        }
+
+                        // Update the source rectangle to draw the current frame
+                        startSpriteSheetRec = new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y);
+                    }
                 }
             }
 
@@ -271,9 +248,27 @@ namespace Space_Invaders
             {
                 //========== Enemy ==========
                 // Update enemies
+                bool hitWall = false;
+
                 foreach (Enemy ene in enemyArray)
                 {
-                    ene.Update();
+                    if (ene.enemyIsAlive)
+                    {
+                        ene.Update();
+
+                        if (ene.enemyPos.X <= 0 || ene.enemyPos.X >= 950 - enemyTex.Width)
+                        {
+                            hitWall = true;
+                        }
+                    }
+                }
+
+                if (hitWall)
+                {
+                    foreach (Enemy ene in enemyArray)
+                    {
+                        ene.MoveDown();
+                    }
                 }
 
                 bool noEnemyLeftInArray = true;

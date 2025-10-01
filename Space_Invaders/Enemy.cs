@@ -37,19 +37,20 @@ namespace Space_Invaders
 
                 // Go down to player 
                 int stopY = 800 - enemyTex.Height;
-                if ((int) enemyPos.Y < stopY)
+                if ((int)enemyPos.Y < stopY)
                 {
                     enemyPos.Y += 1f;
                 }
 
-            enemyPos.X += speed;
+                enemyPos.X += speed;
 
-            if (enemyPos.X <= 0 || enemyPos.X >= 950 - enemyTex.Width)
-            {
-                speed *= -1;
-               
+                if (enemyPos.X <= 0 || enemyPos.X >= 950 - enemyTex.Width)
+                {
+                    speed *= -1;
+
+                }
+
             }
-            
         }
 
             public void MoveDown()
