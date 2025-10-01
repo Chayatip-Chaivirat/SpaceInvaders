@@ -12,7 +12,7 @@ namespace Space_Invaders
         public Rectangle enemyRec;
         public bool enemyIsAlive = true;
         public Rectangle enemyHitBox;
-       
+        public bool lifeLost = false;
         public static int speed = 1;
         public static int moveDown = 20;
 
@@ -28,6 +28,19 @@ namespace Space_Invaders
 
         public void Update()
         {
+            if (enemyIsAlive == true)
+            {
+                enemyHitBox.X = (int)enemyPos.X;
+                enemyHitBox.Y = (int)enemyPos.Y;
+                enemyHitBox.Width = enemyRec.Width;
+                enemyHitBox.Height = enemyRec.Height;
+
+                // Go down to player 
+                int stopY = 800 - enemyTex.Height;
+                if ((int) enemyPos.Y < stopY)
+                {
+                    enemyPos.Y += 1f;
+                }
 
             enemyPos.X += speed;
 
@@ -36,11 +49,6 @@ namespace Space_Invaders
                 speed *= -1;
                
             }
-
-            enemyHitBox.X = (int)enemyPos.X;
-            enemyHitBox.Y = (int)enemyPos.Y;
-            enemyHitBox.Width = enemyRec.Width;
-            enemyHitBox.Height = enemyRec.Height;
             
         }
 

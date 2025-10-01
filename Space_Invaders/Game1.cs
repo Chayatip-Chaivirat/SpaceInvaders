@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Intrinsics;
 
 namespace Space_Invaders
 {
@@ -10,12 +11,13 @@ namespace Space_Invaders
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        KeyboardState keyBoardState;
         KeyboardState previousKeyBoardState;
 
         //========== Enemy ==========
         Enemy[,] enemyArray;
         Texture2D enemyTex;
+        public bool enemyIsAlive = true;
+        Vector2 enemyPos;
 
         //========== Lives ==========
         Texture2D heartTex;
@@ -31,18 +33,60 @@ namespace Space_Invaders
 
         //========== Player ==========
         Player player;
-        public bool enemyIsAlive = true;
-        public bool bulletUsed = false;
-        Bullet bullet;
 
         //========== Bullet ==========
         List<Bullet> bulletList;
         Texture2D bulletTex;
+        public bool bulletUsed = false;
+        Bullet bullet;
 
         //========== Item to Remove ==========
         List<Rectangle> itemToRemove;
-       
 
+        //========== Game State ==========
+        GameState currentGameState;
+
+        //========== Start ==========
+        public bool startButtonClicked = false;
+        Texture2D startBackgroundTex;
+        Vector2 startPositionBackground;
+
+        Start startButton;
+        Vector2 startButtonPos;
+
+        Texture2D startSpriteSheetTex;
+        Vector2 startSpriteSheetPos;
+        Rectangle startSpriteSheetRec;
+        Point frameSize = new Point(100, 100);
+        Point currentFrame = new Point(0, 0);
+        Point sheetSize = new Point(3, 1);
+        int timeSinceLastFrame = 0;
+        int millisecondPerFrame = 1000;
+
+        //========== Gameover ==========
+        Texture2D gameOverBackgroundTex;
+        Vector2 gameOverBackgroundPos;
+
+        GameoverState gameOverSpriteExplosion;
+        Vector2 gameOverSpriteExplosionPos;
+
+        GameoverState gameOverSpriteStar;
+        Vector2 gameOverSpriteStarPos;
+        
+        GameoverState gameOverSpriteStar2;
+        Vector2 gameOverSpriteStar2Pos;
+
+        GameoverState gameOverSpriteExplosion2;
+        Vector2 gameOverSpriteExplosion2Pos;
+
+        GameoverState gameOverSpriteExplosion3;
+        Vector2 gameOverSpriteExplosion3Pos;
+        public enum GameState
+        {
+            Starting,
+            Playing,
+            GameOver
+        }
 
         public Game1()
         {
@@ -64,9 +108,12 @@ namespace Space_Invaders
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
 
             //========== Enemy ==========
-             Vector2 enemyPos = new Vector2(65, 100);
+            enemyPos = new Vector2(65, 100);
             enemyTex = Content.Load<Texture2D>("alien02_sprites");
             enemyArray = new Enemy[5, 5];
 
@@ -106,17 +153,55 @@ namespace Space_Invaders
 
             //========== Score ==========
             scoreSpriteFont = Content.Load<SpriteFont>("Score");
-            
+
+            //========== Start ==========
+            if (currentGameState == GameState.Starting)
+            {
+                startBackgroundTex = Content.Load<Texture2D>("Arkadkabinett-1");
+                startPositionBackground = new Vector2(110, 130);
+
+                Texture2D startButtonTex = Content.Load<Texture2D>("Startknapp");
+                startButtonPos = new Vector2(250, 400);
+                startButton = new Start(startButtonTex, (int)startButtonPos.X, (int)startButtonPos.Y);
+
+                startSpriteSheetTex = Content.Load<Texture2D>("alien02_sprites");
+                startSpriteSheetPos = new Vector2(260, 260);
+                startSpriteSheetRec = new Rectangle(0, 0, 100, 90);
+
+            }
+
+            //========== Gameover ==========
+            gameOverBackgroundTex = Content.Load<Texture2D>("game_over-2");
+            gameOverBackgroundPos = new Vector2(90, 150);
+
+            Texture2D gameOverSpriteExplosionTex = Content.Load<Texture2D>("explotion01_sprites");
+            gameOverSpriteExplosionPos = new Vector2(150, 200);
+            gameOverSpriteExplosion = new GameoverState(gameOverSpriteExplosionTex, gameOverSpriteExplosionPos);
+
+            Texture2D gameOverSpriteStarTex = Content.Load<Texture2D>("star_01");
+            gameOverSpriteStarPos = new Vector2(160, 200);
+            gameOverSpriteStar = new GameoverState(gameOverSpriteStarTex,gameOverSpriteStarPos);
+
+            gameOverSpriteStar2Pos = new Vector2(160, 200);
+            gameOverSpriteStar2 = new GameoverState(gameOverSpriteStarTex, gameOverSpriteStar2Pos);
+
+            gameOverSpriteExplosion2Pos = new Vector2(170, 200);
+            gameOverSpriteExplosion2 = new GameoverState(gameOverSpriteExplosionTex, gameOverSpriteExplosion2Pos);
+
+           gameOverSpriteExplosion3Pos = new Vector2(180, 200);
+            gameOverSpriteExplosion3 = new GameoverState(gameOverSpriteExplosionTex, gameOverSpriteExplosion3Pos);
 
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            //========== GameState ==========
 
-            player.Update(Window.ClientBounds.Width);
+            //==============================
+            //          Start Screen
+            //==============================
 
+            if (currentGameState == GameState.Starting) 
             bool hitWall = false;
 
             foreach (Enemy ene in enemyArray)
@@ -145,90 +230,173 @@ namespace Space_Invaders
             // Collision logic
             foreach (Enemy ene in enemyArray)
             {
+                startButton.Clicked();
+
+                if (startButtonClicked == false)
+                {
+                    timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
+
+                    if (startButton.startButtonClicked)
+                    {
+                        currentGameState = GameState.Playing;
+                    }
+
+                    if (timeSinceLastFrame > millisecondPerFrame)
+                    {
+                        timeSinceLastFrame = 0;
+                    }
+
+                    // animation for alien on start screen
+                    ++currentFrame.X;
+                    if (currentFrame.X >= sheetSize.X)
+                    {
+                        currentFrame.X = 0;
+                        ++currentFrame.Y; 
+                        if (currentFrame.Y >= sheetSize.Y)
+                        { 
+                            currentFrame.Y = 0;
+                        }
+                    }
+
+                    // Update the source rectangle to draw the current frame
+                    startSpriteSheetRec = new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y);
+                }
+            }
+
+            //==============================
+            //          Main Game
+            //==============================
+
+            if (currentGameState == GameState.Playing)
+            {
+                //========== Enemy ==========
+                // Update enemies
+                foreach (Enemy ene in enemyArray)
+                {
+                    ene.Update();
+                }
+
+                bool noEnemyLeftInArray = true;
+                foreach (Enemy ene in enemyArray)
+                {
+                    if (ene.enemyIsAlive == true)
+                        {
+                            noEnemyLeftInArray = false;
+                            break;
+                        }
+                }
+
+                    // Collision logic
+                    foreach (Enemy ene in enemyArray)
+                {
+
+                    foreach (Bullet b in bulletList)
+                    {
+                        if (ene.enemyIsAlive == true && b.bulletHitBox.Intersects(ene.enemyHitBox))
+                        {
+                            ene.enemyIsAlive = false;
+                            b.bulletUsed = true;
+                            itemToRemove.Add(ene.enemyHitBox);
+                            itemToRemove.Add(ene.enemyRec);
+                            score += 1;
+
+                        }
+
+                    }
+
+                }
+
+                foreach (Enemy ene in enemyArray)
+                {
+                    if (ene.enemyIsAlive == false)
+                    {
+                        itemToRemove.Add(ene.enemyRec);
+                    }
+                } 
+
+                //========== Bullet ==========
 
                 foreach (Bullet b in bulletList)
                 {
-                    if (ene.enemyIsAlive == true && b.bulletHitBox.Intersects(ene.enemyHitBox))
+                    if (b.bulletPos.Y < 0)
                     {
-                        ene.enemyIsAlive = false;
                         b.bulletUsed = true;
-                        itemToRemove.Add(ene.enemyHitBox);
-                        itemToRemove.Add(ene.enemyRec);
-                        score += 1;
+                    }
+                    b.Update(player.pos1, gameTime);
+                } 
+                // remove inactive bullets
+                bulletList.RemoveAll(b => b.bulletUsed == true);
+
+                if (Lives > 0)
+                {
+                    KeyboardState state = Keyboard.GetState();
+                    previousKeyBoardState = state;
+
+
+                    if (previousKeyBoardState.IsKeyDown(Keys.Space))
+                    {
+                        int max_bullets = 1;
+                        if (bulletList.Count < max_bullets) // only one bullet at a time
+                        {
+                            bulletList.Add(new Bullet(bulletTex, player.pos1));
+                        }
 
                     }
-
                 }
 
-            }
+                //========== Lives ==========
 
-            foreach (Enemy ene in enemyArray)
-            {
-                if (ene.enemyIsAlive == false)
+                // lose one life when enemy reaches bottom
+                int screenHeight = Window.ClientBounds.Height;
+                int stopY = screenHeight - enemyTex.Height;
+
+                foreach (Enemy ene in enemyArray)
                 {
-                    itemToRemove.Add(ene.enemyRec);
-                }
-            }
+                    if (ene.lifeLost == false && ene.enemyIsAlive == true && ene.enemyHitBox.Bottom >= screenHeight - 200)
+                    {
+                        if (Lives > 0)
+                        {
+                            Lives -= 1;
+                            ene.enemyIsAlive = false;
+                            ene.lifeLost = true;
+                            itemToRemove.Add(ene.enemyRec);
+                            itemToRemove.Add(ene.enemyHitBox);
+                        }
+                    }
 
-
-            
-            //========== Bullet ==========
-
-            foreach (Bullet b in bulletList)
-            {
-                if (b.bulletPos.Y < 0)
-                {
-                    b.bulletUsed = true;
-                }
-                b.Update(player.pos1, gameTime);
-            }
-
-            foreach (Enemy ene in enemyArray)
-            {
-                ene.Update();
-            }
-
-            // remove inactive bullets
-            bulletList.RemoveAll(b => b.bulletUsed == true);
-
-            KeyboardState state = Keyboard.GetState();
-            previousKeyBoardState = state;
-
-
-            if (previousKeyBoardState.IsKeyDown(Keys.Space))
-            {
-                int max_bullets = 1;
-                if (bulletList.Count < max_bullets) // only one bullet at a time
-                {
-                    bulletList.Add(new Bullet(bulletTex, player.pos1));
-                }
-
-            }
-
-            //========== Lives ==========
-
-            // lose one life when enemy reaches bottom
-            foreach (Enemy ene in enemyArray)
-            {
-                if (ene.enemyPos.Y >= 750 - enemyTex.Height)
-                {
+                    //========== Player ==========
                     if (Lives > 0)
                     {
-                        Lives -= 1;
-                        ene.enemyIsAlive = false;
-                        itemToRemove.Add(ene.enemyRec);
-                        itemToRemove.Add(ene.enemyHitBox);
+                        player.Update(Window.ClientBounds.Width);
                     }
-                    //else
-                    //{
-                    //    Exit();
-                    //}
+                    
+                    if (Lives <= 0 || noEnemyLeftInArray == true) // switch to game over state when no lives left OR no enemies left
+                    {
+                        currentGameState = GameState.GameOver;
+                    } 
                 }
 
-
-            base.Update(gameTime);
+                //==============================
+                //        Game Over Screen
+                //==============================
             }
-            
+            if (currentGameState == GameState.GameOver)
+            {
+                gameOverSpriteStar.Update(gameTime);
+                gameOverSpriteExplosion.Update(gameTime);
+                gameOverSpriteExplosion2.Update(gameTime);
+                gameOverSpriteExplosion3.Update(gameTime);
+                gameOverSpriteStar2.Update(gameTime);
+
+                // switch to start screen when pressing Enter or Space
+                KeyboardState state = Keyboard.GetState();
+                if (previousKeyBoardState.IsKeyUp(Keys.Enter) && previousKeyBoardState.IsKeyDown(Keys.Enter) || previousKeyBoardState.IsKeyUp(Keys.Space) && previousKeyBoardState.IsKeyDown(Keys.Space)) // not working
+                {
+                    Lives = 5;
+                    LoadContent();
+                    currentGameState = GameState.Starting;
+                }
+            }
         }
 
 
@@ -267,8 +435,10 @@ namespace Space_Invaders
                 int x = 10 + i * (w + 5);
                 int y = 10;
                 _spriteBatch.Draw(heartTex, new Rectangle(x, y, w, h), Color.White); /// draw texture
-                _spriteBatch.Draw(titleTex, titlePos, Color.White);
             }
+
+            //========== Title ==========
+            _spriteBatch.Draw(titleTex, titlePos, Color.White);
 
             //========== Score ==========
             Vector2 scorePos = new Vector2(550, 10);
@@ -277,6 +447,28 @@ namespace Space_Invaders
                 _spriteBatch.DrawString(scoreSpriteFont, "Score: " + score, scorePos, Color.Black);
             }
             Window.Title = "Space Invaders - Lives: " + Lives + " Score: " + score;
+
+            //========== Start ==========
+
+            if ( currentGameState == GameState.Starting)
+            {
+             _spriteBatch.Draw(startBackgroundTex, startPositionBackground, Color.White); // start background
+             startButton.Draw(_spriteBatch); // start button
+             _spriteBatch.Draw(startSpriteSheetTex, startSpriteSheetPos, startSpriteSheetRec , Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0); // alien animation on start screen
+
+            }
+
+            //========== Gameover ==========
+            if (currentGameState == GameState.GameOver)
+            {
+                _spriteBatch.Draw(gameOverBackgroundTex, gameOverBackgroundPos, Color.Black); // game over background
+                gameOverSpriteExplosion.Draw(_spriteBatch); // explosion animation
+                gameOverSpriteStar.Draw(_spriteBatch); // star animation
+                gameOverSpriteExplosion3.Draw(_spriteBatch);
+                gameOverSpriteStar2.Draw(_spriteBatch);
+                gameOverSpriteExplosion2.Draw(_spriteBatch);
+            }
+
 
             _spriteBatch.End();
 
