@@ -344,8 +344,8 @@ namespace Space_Invaders
                                 itemToRemove.Add(ene.enemyHitBox);
                                 itemToRemove.Add(ene.enemyRec);
                                 score += 1;
-                                if (enemyTex == enemySpaceShipTex)
-                                {
+                                if (enemyTex == enemySpaceShipTex) // doesn't work
+                            {
                                     score += 2;
                                 }
                         }
