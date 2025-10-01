@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Intrinsics;
 
 namespace Space_Invaders
 {
@@ -60,21 +61,26 @@ namespace Space_Invaders
         Point currentFrame = new Point(0, 0);
         Point sheetSize = new Point(3, 1);
         int timeSinceLastFrame = 0;
-        int millisecondPerFrame = 50;
+        int millisecondPerFrame = 1000;
 
         //========== Gameover ==========
         Texture2D gameOverBackgroundTex;
         Vector2 gameOverBackgroundPos;
 
         GameoverState gameOverSpriteExplosion;
-        Texture2D gameOverSpriteExplosionTex;
         Vector2 gameOverSpriteExplosionPos;
-        Rectangle gameOverSpriteExplosionRec;
 
         GameoverState gameOverSpriteStar;
-        Texture2D gameOverSpriteStarTex;
         Vector2 gameOverSpriteStarPos;
-        Rectangle gameOverSpriteStarRec;
+        
+        GameoverState gameOverSpriteStar2;
+        Vector2 gameOverSpriteStar2Pos;
+
+        GameoverState gameOverSpriteExplosion2;
+        Vector2 gameOverSpriteExplosion2Pos;
+
+        GameoverState gameOverSpriteExplosion3;
+        Vector2 gameOverSpriteExplosion3Pos;
         public enum GameState
         {
             Starting,
@@ -161,19 +167,29 @@ namespace Space_Invaders
                 startSpriteSheetTex = Content.Load<Texture2D>("alien02_sprites");
                 startSpriteSheetPos = new Vector2(260, 260);
                 startSpriteSheetRec = new Rectangle(0, 0, 100, 90);
+
             }
 
             //========== Gameover ==========
-                gameOverBackgroundTex = Content.Load<Texture2D>("game_over-2");
-                gameOverBackgroundPos = new Vector2(90, 150);
+            gameOverBackgroundTex = Content.Load<Texture2D>("game_over-2");
+            gameOverBackgroundPos = new Vector2(90, 150);
 
-                Texture2D gameOverSpriteExplosionTex = Content.Load<Texture2D>("explotion01_sprites");
-                gameOverSpriteExplosionPos = new Vector2(150, 200);
-                gameOverSpriteExplosion = new GameoverState(gameOverSpriteExplosionTex, gameOverSpriteExplosionPos);
+            Texture2D gameOverSpriteExplosionTex = Content.Load<Texture2D>("explotion01_sprites");
+            gameOverSpriteExplosionPos = new Vector2(150, 200);
+            gameOverSpriteExplosion = new GameoverState(gameOverSpriteExplosionTex, gameOverSpriteExplosionPos);
 
-                Texture2D gameOverSpriteStarTex = Content.Load<Texture2D>("star_01");
-                gameOverSpriteStarPos = new Vector2(160, 200);
-                gameOverSpriteStar = new GameoverState(gameOverSpriteStarTex,gameOverSpriteStarPos);
+            Texture2D gameOverSpriteStarTex = Content.Load<Texture2D>("star_01");
+            gameOverSpriteStarPos = new Vector2(160, 200);
+            gameOverSpriteStar = new GameoverState(gameOverSpriteStarTex,gameOverSpriteStarPos);
+
+            gameOverSpriteStar2Pos = new Vector2(160, 200);
+            gameOverSpriteStar2 = new GameoverState(gameOverSpriteStarTex, gameOverSpriteStar2Pos);
+
+            gameOverSpriteExplosion2Pos = new Vector2(170, 200);
+            gameOverSpriteExplosion2 = new GameoverState(gameOverSpriteExplosionTex, gameOverSpriteExplosion2Pos);
+
+           gameOverSpriteExplosion3Pos = new Vector2(180, 200);
+            gameOverSpriteExplosion3 = new GameoverState(gameOverSpriteExplosionTex, gameOverSpriteExplosion3Pos);
 
         }
 
@@ -336,21 +352,24 @@ namespace Space_Invaders
                 //==============================
                 //        Game Over Screen
                 //==============================
+            }
+            if (currentGameState == GameState.GameOver)
+            {
+                gameOverSpriteStar.Update(gameTime);
+                gameOverSpriteExplosion.Update(gameTime);
+                gameOverSpriteExplosion2.Update(gameTime);
+                gameOverSpriteExplosion3.Update(gameTime);
+                gameOverSpriteStar2.Update(gameTime);
 
-                if (currentGameState == GameState.GameOver)  
+                // switch to start screen when pressing Enter or Space
+                KeyboardState state = Keyboard.GetState();
+                if (previousKeyBoardState.IsKeyUp(Keys.Enter) && previousKeyBoardState.IsKeyDown(Keys.Enter) || previousKeyBoardState.IsKeyUp(Keys.Space) && previousKeyBoardState.IsKeyDown(Keys.Space)) // not working
                 {
-                    gameOverSpriteStar.Update(gameTime);
-                    gameOverSpriteExplosion.Update(gameTime);
-
-                    // switch to start screen when pressing Enter or Space
-                    KeyboardState state = Keyboard.GetState();
-                    if (previousKeyBoardState.IsKeyUp(Keys.Enter) && previousKeyBoardState.IsKeyDown(Keys.Enter) || previousKeyBoardState.IsKeyUp(Keys.Space) && previousKeyBoardState.IsKeyDown(Keys.Space)) // not working
-                    {
-                        currentGameState = GameState.Starting;
-                    }
+                    Lives = 5;
+                    LoadContent();
+                    currentGameState = GameState.Starting;
                 }
             }
-            
         }
 
 
@@ -418,6 +437,9 @@ namespace Space_Invaders
                 _spriteBatch.Draw(gameOverBackgroundTex, gameOverBackgroundPos, Color.Black); // game over background
                 gameOverSpriteExplosion.Draw(_spriteBatch); // explosion animation
                 gameOverSpriteStar.Draw(_spriteBatch); // star animation
+                gameOverSpriteExplosion3.Draw(_spriteBatch);
+                gameOverSpriteStar2.Draw(_spriteBatch);
+                gameOverSpriteExplosion2.Draw(_spriteBatch);
             }
 
 

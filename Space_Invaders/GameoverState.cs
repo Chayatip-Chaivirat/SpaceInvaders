@@ -16,6 +16,7 @@ namespace Space_Invaders
         Random randomPos;
         int stopX;
         int stopY;
+
         Point frameSize = new Point(110, 100);
         Point currentFrame = new Point(0, 0);
         Point sheetSize = new Point(5, 1);
@@ -37,47 +38,64 @@ namespace Space_Invaders
         public void Update(GameTime gameTime)
         {
             timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
-
-
             if (timeSinceLastFrame > millisecondPerFrame)
             {
-                timeSinceLastFrame -= millisecondPerFrame;
-
-                // animation for sprites on gameover screen
-                ++currentFrame.X;
-                if (currentFrame.X >= sheetSize.X)
-                {
-                    currentFrame.X = 0;
-                    ++currentFrame.Y;
-                    if (currentFrame.Y >= sheetSize.Y)
-                    {
-                        currentFrame.Y = 0;
-                    }
-                }
-                gameoverRec = new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y);
+                timeSinceLastFrame = 0;
             }
+            ++currentFrame.X;
+            if (currentFrame.X >= sheetSize.X)
+            {
+                currentFrame.X = 0;
+                ++currentFrame.Y;
+                if (currentFrame.Y >= sheetSize.Y)
+                {
+                    currentFrame.Y = 0;
+                }
 
-            //if (timeSinceLastFrame > millisecondPerFrame)
-            //{
-            //    currentFrame.X++;
-            //    if (currentFrame.X >= sheetSize.X)
-            //    {
-            //        currentFrame.X = 0;
-            //        currentFrame.Y++;
-            //        if (currentFrame.Y >= sheetSize.Y)
-            //        {
-            //            currentFrame.Y = 0;
-            //        }
-            //    }
-            //}
+                Console.WriteLine(currentFrame);
 
-            // Reset the timer
-        //                timeSinceLastFrame -= millisecondPerFrame;
+                //if (timeSinceLastFrame > millisecondPerFrame)
+                //{
+                //    timeSinceLastFrame -= millisecondPerFrame;
+
+                //    // animation for sprites on gameover screen
+                //    ++currentFrame.X;
+                //    if (currentFrame.X >= sheetSize.X)
+                //    {
+                //        currentFrame.X = 0;
+                //        ++currentFrame.Y;
+                //        if (currentFrame.Y >= sheetSize.Y)
+                //        {
+                //            currentFrame.Y = 0;
+                //        }
+                //    }
+                //    gameoverRec = new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y);
+                //}
+
+                //if (timeSinceLastFrame > millisecondPerFrame)
+                //{
+                //    currentFrame.X++;
+                //    if (currentFrame.X >= sheetSize.X)
+                //    {
+                //        currentFrame.X = 0;
+                //        currentFrame.Y++;
+                //        if (currentFrame.Y >= sheetSize.Y)
+                //        {
+                //            currentFrame.Y = 0;
+                //        }
+                //    }
+                //}
+
+                // Reset the timer
+                //
+                // timeSinceLastFrame -= millisecondPerFrame;
+            }
+            gameoverRec = new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y);
         }
 
         public void Draw(SpriteBatch sb)
         {
-            sb.Draw(gameoverTex, gameoverPos, gameoverRec, Color.GreenYellow/*, 0, Vector2.Zero, 1, SpriteEffects.None, 0*/);
+            sb.Draw(gameoverTex, gameoverPos, gameoverRec, Color.GreenYellow, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
         }
     }
 }
