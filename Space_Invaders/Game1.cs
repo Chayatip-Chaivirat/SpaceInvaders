@@ -202,6 +202,33 @@ namespace Space_Invaders
             //==============================
 
             if (currentGameState == GameState.Starting) 
+            bool hitWall = false;
+
+            foreach (Enemy ene in enemyArray)
+            {
+                if (ene.enemyIsAlive)
+                {
+                    ene.Update();
+
+                    if (ene.enemyPos.X <= 0 || ene.enemyPos.X >= 950 - enemyTex.Width)
+                    {
+                        hitWall = true;
+                    }
+                }
+            }
+
+            if (hitWall)
+            {
+                foreach (Enemy ene in enemyArray)
+                {
+                    ene.MoveDown();
+                }
+            }
+
+
+            //========== Enemy ==========
+            // Collision logic
+            foreach (Enemy ene in enemyArray)
             {
                 startButton.Clicked();
 
