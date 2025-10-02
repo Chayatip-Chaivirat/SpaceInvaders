@@ -7,7 +7,7 @@ namespace Space_Invaders
 {
     internal class Enemy
     {
-        Texture2D enemyTex;
+        public Texture2D enemyTex;
         public Vector2 enemyPos;
         public Rectangle enemyRec;
         public bool enemyIsAlive = true;
