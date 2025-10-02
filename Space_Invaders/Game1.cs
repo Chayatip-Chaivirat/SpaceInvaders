@@ -21,6 +21,10 @@ namespace Space_Invaders
         Vector2 enemyPos;
         public int points;
 
+        Texture2D alientopTex;
+        Texture2D alienmidTex;
+        Texture2D alienbottomTex;
+
         //========== Lives ==========
         Texture2D heartTex;
         public int Lives = 5;
@@ -123,9 +127,9 @@ namespace Space_Invaders
             enemyPos = new Vector2(65, 100);
             enemyTex = Content.Load<Texture2D>("alien02_sprites");
 
-            Texture2D alientopTex = Content.Load<Texture2D>("alien03_sprites");
-            Texture2D alienmidTex = Content.Load<Texture2D>("alien01_sprites");
-            Texture2D alienbottomTex = Content.Load<Texture2D>("orangemonster");
+            alientopTex = Content.Load<Texture2D>("alien03_sprites");
+            alienmidTex = Content.Load<Texture2D>("alien01_sprites");
+            //alienbottomTex = Content.Load<Texture2D>("orangemonster");
 
             enemyArray = new Enemy[5, 5];
 
@@ -235,9 +239,6 @@ namespace Space_Invaders
             //          Start Screen
             //==============================
 
-            // Movement logic
-
-            bool hitWall = false;
 
             if (currentGameState == GameState.Starting)
             {
@@ -283,6 +284,7 @@ namespace Space_Invaders
             {
                 //========== Enemy ==========
                 // Update enemies
+                bool hitWall = false;
 
                 foreach (Enemy ene in enemyArray)
                 {
@@ -290,7 +292,7 @@ namespace Space_Invaders
                     {
                         ene.Update();
 
-                        if (ene.enemyPos.X <= 0 || ene.enemyPos.X >= 950 - enemyTex.Width)
+                        if (ene.enemyPos.X <= 0 || ene.enemyPos.X >= Window.ClientBounds.Width - ene.enemyRec.Width)
                         {
                             hitWall = true;
                         }
@@ -299,6 +301,7 @@ namespace Space_Invaders
 
                 if (hitWall)
                 {
+                    Enemy.speed *= -1;
                     foreach (Enemy ene in enemyArray)
                     {
                         ene.MoveDown();
@@ -327,7 +330,25 @@ namespace Space_Invaders
                             b.bulletUsed = true;
                             itemToRemove.Add(ene.enemyHitBox);
                             itemToRemove.Add(ene.enemyRec);
-                            score += points;
+
+                            // Different points for different enemies
+                            if (ene.enemyTex == alientopTex)
+                            {
+                                points = 5;
+                                score += points;
+                            }
+
+                            if (ene.enemyTex == alienmidTex)
+                            {
+                                points = 3;
+                                score += points;
+                            }
+
+                            if (ene.enemyTex == enemyTex)
+                            {
+                                points = 1;
+                                score += points;
+                            }
 
                         }
 
