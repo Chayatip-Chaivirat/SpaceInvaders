@@ -49,7 +49,7 @@ namespace Space_Invaders
         //========== Start ==========
         public bool startButtonClicked = false;
         Texture2D startBackgroundTex;
-        Vector2 startPositionBackground;
+        Rectangle startBackgroundRec;
 
         Start startButton;
         Vector2 startButtonPos;
@@ -64,8 +64,11 @@ namespace Space_Invaders
         int millisecondPerFrame = 1000;
 
         //========== Gameover ==========
+        Texture2D gameOverTex;
+        Vector2 gameOverPos;
+
         Texture2D gameOverBackgroundTex;
-        Vector2 gameOverBackgroundPos;
+        Rectangle gameOverBackgroundRec;
 
         GameoverState gameOverSpriteExplosion;
         Vector2 gameOverSpriteExplosionPos;
@@ -158,7 +161,7 @@ namespace Space_Invaders
             if (currentGameState == GameState.Starting)
             {
                 startBackgroundTex = Content.Load<Texture2D>("Arkadkabinett-1");
-                startPositionBackground = new Vector2(110, 130);
+                startBackgroundRec = new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height);
 
                 Texture2D startButtonTex = Content.Load<Texture2D>("Startknapp");
                 startButtonPos = new Vector2(250, 400);
@@ -171,8 +174,11 @@ namespace Space_Invaders
             }
 
             //========== Gameover ==========
-            gameOverBackgroundTex = Content.Load<Texture2D>("game_over-2");
-            gameOverBackgroundPos = new Vector2(90, 150);
+            gameOverTex = Content.Load<Texture2D>("game_over-2");
+            gameOverPos = new Vector2(90, 250);
+
+            gameOverBackgroundTex = Content.Load<Texture2D>("Arkadkabinett-1");
+            gameOverBackgroundRec = new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height);
 
             Texture2D gameOverSpriteExplosionTex = Content.Load<Texture2D>("explotion01_sprites");
             gameOverSpriteExplosionPos = new Vector2(150, 200);
@@ -447,7 +453,7 @@ namespace Space_Invaders
 
             if ( currentGameState == GameState.Starting)
             {
-             _spriteBatch.Draw(startBackgroundTex, startPositionBackground, Color.White); // start background
+             _spriteBatch.Draw(startBackgroundTex, startBackgroundRec, Color.White); // start background
              startButton.Draw(_spriteBatch); // start button
              _spriteBatch.Draw(startSpriteSheetTex, startSpriteSheetPos, startSpriteSheetRec , Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0); // alien animation on start screen
 
@@ -456,7 +462,8 @@ namespace Space_Invaders
             //========== Gameover ==========
             if (currentGameState == GameState.GameOver)
             {
-                _spriteBatch.Draw(gameOverBackgroundTex, gameOverBackgroundPos, Color.Black); // game over background
+                _spriteBatch.Draw(gameOverBackgroundTex, gameOverBackgroundRec, Color.White);
+                _spriteBatch.Draw(gameOverTex, gameOverPos, Color.Black); // game over background
                 gameOverSpriteExplosion.Draw(_spriteBatch); // explosion animation
                 gameOverSpriteStar.Draw(_spriteBatch); // star animation
                 gameOverSpriteExplosion3.Draw(_spriteBatch);
