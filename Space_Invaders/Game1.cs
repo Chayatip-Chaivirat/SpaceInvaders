@@ -129,7 +129,7 @@ namespace Space_Invaders
 
             alientopTex = Content.Load<Texture2D>("alien03_sprites");
             alienmidTex = Content.Load<Texture2D>("alien01_sprites");
-            alienbottomTex = Content.Load<Texture2D>("orangemonster");
+            //alienbottomTex = Content.Load<Texture2D>("orangemonster");
 
             enemyArray = new Enemy[5, 5];
 
