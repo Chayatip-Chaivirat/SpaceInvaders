@@ -235,7 +235,6 @@ namespace Space_Invaders
             //          Start Screen
             //==============================
 
-            //========== Enemy ==========
             // Movement logic
 
             bool hitWall = false;
@@ -243,8 +242,6 @@ namespace Space_Invaders
             if (currentGameState == GameState.Starting)
             {
                 //========== Enemy ==========
-                foreach (Enemy ene in enemyArray)
-                {
                     startButton.Clicked();
 
                     if (startButtonClicked == false)
@@ -277,12 +274,11 @@ namespace Space_Invaders
                         startSpriteSheetRec = new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y);
                     }
                 }
-            }
 
             //==============================
             //          Main Game
             //==============================
-
+            
             if (currentGameState == GameState.Playing)
             {
                 //========== Enemy ==========
@@ -296,6 +292,7 @@ namespace Space_Invaders
                         {
                             ene.Update();
 
+<<<<<<< Updated upstream
                             if (ene.enemyPos.X <= 0 || ene.enemyPos.X >= 950 - enemyTex.Width)
                             {
                                 hitWall = true;
@@ -315,6 +312,15 @@ namespace Space_Invaders
                     foreach (Enemy ene in enemyArray)
                     {
                         if (ene.enemyIsAlive == true)
+=======
+           
+            // Collision logic
+         
+                bool noEnemyLeftInArray = true;
+                foreach (Enemy ene in enemyArray)
+                {
+                    if (ene.enemyIsAlive == true)
+>>>>>>> Stashed changes
                         {
                             noEnemyLeftInArray = false;
                             break;
