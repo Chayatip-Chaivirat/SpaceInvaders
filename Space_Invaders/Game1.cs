@@ -278,151 +278,138 @@ namespace Space_Invaders
             //==============================
             //          Main Game
             //==============================
-            
+
             if (currentGameState == GameState.Playing)
             {
                 //========== Enemy ==========
                 // Update enemies
 
-                    //========== Enemy ==========
-
-                    foreach (Enemy ene in enemyArray)
-                    {
-                        if (ene.enemyIsAlive)
-                        {
-                            ene.Update();
-
-<<<<<<< Updated upstream
-                            if (ene.enemyPos.X <= 0 || ene.enemyPos.X >= 950 - enemyTex.Width)
-                            {
-                                hitWall = true;
-                            }
-                        }
-                    }
-
-                    if (hitWall)
-                    {
-                        foreach (Enemy ene in enemyArray)
-                        {
-                            ene.MoveDown();
-                        }
-                    }
-
-                    bool noEnemyLeftInArray = true;
-                    foreach (Enemy ene in enemyArray)
-                    {
-                        if (ene.enemyIsAlive == true)
-=======
-           
-            // Collision logic
-         
-                bool noEnemyLeftInArray = true;
                 foreach (Enemy ene in enemyArray)
                 {
-                    if (ene.enemyIsAlive == true)
->>>>>>> Stashed changes
-                        {
-                            noEnemyLeftInArray = false;
-                            break;
-                        }
-                    }
-
-                    // Collision logic
-                    foreach (Enemy ene in enemyArray)
+                    if (ene.enemyIsAlive)
                     {
+                        ene.Update();
 
-                        foreach (Bullet b in bulletList)
+                        if (ene.enemyPos.X <= 0 || ene.enemyPos.X >= 950 - enemyTex.Width)
                         {
-                            if (ene.enemyIsAlive == true && b.bulletHitBox.Intersects(ene.enemyHitBox))
-                            {
-                                ene.enemyIsAlive = false;
-                                b.bulletUsed = true;
-                                itemToRemove.Add(ene.enemyHitBox);
-                                itemToRemove.Add(ene.enemyRec);
-                                score += 1;
-
-                            }
-
-                        }
-
-                    }
-
-                    foreach (Enemy ene in enemyArray)
-                    {
-                        if (ene.enemyIsAlive == false)
-                        {
-                            itemToRemove.Add(ene.enemyRec);
-                        }
-                    }
-
-                    //========== Bullet ==========
-
-                    foreach (Bullet b in bulletList)
-                    {
-                        if (b.bulletPos.Y < 0)
-                        {
-                            b.bulletUsed = true;
-                        }
-                        b.Update(player.pos1, gameTime);
-                    }
-                    // remove inactive bullets
-                    bulletList.RemoveAll(b => b.bulletUsed == true);
-
-                    if (Lives > 0)
-                    {
-                        KeyboardState state = Keyboard.GetState();
-                        previousKeyBoardState = state;
-
-
-                        if (previousKeyBoardState.IsKeyDown(Keys.Space))
-                        {
-                            int max_bullets = 1;
-                            if (bulletList.Count < max_bullets) // only one bullet at a time
-                            {
-                                bulletList.Add(new Bullet(bulletTex, player.pos1));
-                            }
-
-                        }
-                    }
-
-                    //========== Lives ==========
-
-                    // lose one life when enemy reaches bottom
-                    int screenHeight = Window.ClientBounds.Height;
-                    int stopY = screenHeight - enemyTex.Height;
-
-                    foreach (Enemy ene in enemyArray)
-                    {
-                        if (ene.lifeLost == false && ene.enemyIsAlive == true && ene.enemyHitBox.Bottom >= screenHeight - 200)
-                        {
-                            if (Lives > 0)
-                            {
-                                Lives -= 1;
-                                ene.enemyIsAlive = false;
-                                ene.lifeLost = true;
-                                itemToRemove.Add(ene.enemyRec);
-                                itemToRemove.Add(ene.enemyHitBox);
-                            }
-                        }
-
-                        //========== Player ==========
-                        if (Lives > 0)
-                        {
-                            player.Update(Window.ClientBounds.Width);
-                        }
-
-                        if (Lives <= 0 || noEnemyLeftInArray == true) // switch to game over state when no lives left OR no enemies left
-                        {
-                            currentGameState = GameState.GameOver;
+                            hitWall = true;
                         }
                     }
                 }
 
-            //==============================
-            //        Game Over Screen
-            //==============================
-            
-            if (currentGameState == GameState.GameOver)
+                if (hitWall)
+                {
+                    foreach (Enemy ene in enemyArray)
+                    {
+                        ene.MoveDown();
+                    }
+                }
+
+                bool noEnemyLeftInArray = true;
+                foreach (Enemy ene in enemyArray)
+                {
+                    if (ene.enemyIsAlive == true)
+                    {
+                        noEnemyLeftInArray = false;
+                        break;
+                    }
+                }
+
+                // Collision logic
+                foreach (Enemy ene in enemyArray)
+                {
+
+                    foreach (Bullet b in bulletList)
+                    {
+                        if (ene.enemyIsAlive == true && b.bulletHitBox.Intersects(ene.enemyHitBox))
+                        {
+                            ene.enemyIsAlive = false;
+                            b.bulletUsed = true;
+                            itemToRemove.Add(ene.enemyHitBox);
+                            itemToRemove.Add(ene.enemyRec);
+                            score += 1;
+
+                        }
+
+                    }
+
+                }
+
+                foreach (Enemy ene in enemyArray)
+                {
+                    if (ene.enemyIsAlive == false)
+                    {
+                        itemToRemove.Add(ene.enemyRec);
+                    }
+                }
+
+                //========== Bullet ==========
+
+                foreach (Bullet b in bulletList)
+                {
+                    if (b.bulletPos.Y < 0)
+                    {
+                        b.bulletUsed = true;
+                    }
+                    b.Update(player.pos1, gameTime);
+                }
+                // remove inactive bullets
+                bulletList.RemoveAll(b => b.bulletUsed == true);
+
+                if (Lives > 0)
+                {
+                    KeyboardState state = Keyboard.GetState();
+                    previousKeyBoardState = state;
+
+
+                    if (previousKeyBoardState.IsKeyDown(Keys.Space))
+                    {
+                        int max_bullets = 1;
+                        if (bulletList.Count < max_bullets) // only one bullet at a time
+                        {
+                            bulletList.Add(new Bullet(bulletTex, player.pos1));
+                        }
+
+                    }
+                }
+
+                //========== Lives ==========
+
+                // lose one life when enemy reaches bottom
+                int screenHeight = Window.ClientBounds.Height;
+                int stopY = screenHeight - enemyTex.Height;
+
+                foreach (Enemy ene in enemyArray)
+                {
+                    if (ene.lifeLost == false && ene.enemyIsAlive == true && ene.enemyHitBox.Bottom >= screenHeight - 200)
+                    {
+                        if (Lives > 0)
+                        {
+                            Lives -= 1;
+                            ene.enemyIsAlive = false;
+                            ene.lifeLost = true;
+                            itemToRemove.Add(ene.enemyRec);
+                            itemToRemove.Add(ene.enemyHitBox);
+                        }
+                    }
+
+                    //========== Player ==========
+                    if (Lives > 0)
+                    {
+                        player.Update(Window.ClientBounds.Width);
+                    }
+
+                    if (Lives <= 0 || noEnemyLeftInArray == true) // switch to game over state when no lives left OR no enemies left
+                    {
+                        currentGameState = GameState.GameOver;
+                    }
+                }
+             }
+                //==============================
+                //        Game Over Screen
+                //==============================
+
+                if (currentGameState == GameState.GameOver)
             {
                 gameOverSpriteStar.Update(gameTime);
                 gameOverSpriteExplosion.Update(gameTime);
