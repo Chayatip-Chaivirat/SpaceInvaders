@@ -239,9 +239,6 @@ namespace Space_Invaders
             //          Start Screen
             //==============================
 
-            // Movement logic
-
-            bool hitWall = false;
 
             if (currentGameState == GameState.Starting)
             {
@@ -287,6 +284,7 @@ namespace Space_Invaders
             {
                 //========== Enemy ==========
                 // Update enemies
+                bool hitWall = false;
 
                 foreach (Enemy ene in enemyArray)
                 {
@@ -294,7 +292,7 @@ namespace Space_Invaders
                     {
                         ene.Update();
 
-                        if (ene.enemyPos.X <= 0 || ene.enemyPos.X >= 950 - enemyTex.Width)
+                        if (ene.enemyPos.X <= 0 || ene.enemyPos.X >= Window.ClientBounds.Width - ene.enemyRec.Width)
                         {
                             hitWall = true;
                         }
@@ -303,6 +301,7 @@ namespace Space_Invaders
 
                 if (hitWall)
                 {
+                    Enemy.speed *= -1;
                     foreach (Enemy ene in enemyArray)
                     {
                         ene.MoveDown();
