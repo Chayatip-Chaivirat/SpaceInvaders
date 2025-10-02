@@ -34,6 +34,7 @@ internal class Player
         if (state.IsKeyDown(Keys.Right))
         { 
             pos1.X += speed * 0.046f;
+            pos1.X += speed * 0.046f;
         }
 
         int stopX = windowWidth - playerTexture.Width;
@@ -50,9 +51,9 @@ internal class Player
     }
 
 
-    public void Draw(SpriteBatch sb)
+    public void Draw(SpriteBatch spritebatch)
     {
-        sb.Draw(playerTexture, pos1, Color.Blue);
+        spritebatch.Draw(playerTexture, pos1, Color.White);
     }
 }
 

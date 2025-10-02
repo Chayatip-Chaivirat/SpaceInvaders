@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Linq;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Taskbar;
 
 namespace Space_Invaders
 {
@@ -24,6 +25,8 @@ namespace Space_Invaders
         //========== Title ==========
         Texture2D titleTex;
         Vector2 titlePos;
+       
+
 
         //========== Score ==========
         int score = 0;
@@ -68,6 +71,11 @@ namespace Space_Invaders
             //========== Enemy ==========
              Vector2 enemyPos = new Vector2(65, 100);
             enemyTex = Content.Load<Texture2D>("alien02_sprites");
+
+            Texture2D alientopTex = Content.Load<Texture2D>("alien03_sprites");
+            Texture2D alienmidTex = Content.Load<Texture2D>("alien01_sprites");
+            Texture2D alienbottomTex = Content.Load<Texture2D>("orangemonster");
+
             enemyArray = new Enemy[5, 5];
 
             for (int i = 0; i < 5; i++)
@@ -77,8 +85,26 @@ namespace Space_Invaders
                     int x = (int) enemyPos.X + j * 120;
                     int y = (int) enemyPos.Y + i * 100;
 
-                    Enemy ene = new Enemy(enemyTex, x, y);
-                    enemyArray[i, j] = new Enemy(enemyTex, x, y);
+                    Texture2D tex;
+                    int points;
+
+                    if (i == 0) // top
+                    {
+                        tex = alientopTex;
+                        points = 5;
+                    }
+                    else if (i == 1 || i == 2) // mid
+                    {
+                        tex = alienmidTex;
+                        points = 3;
+                    }
+                    else // bottom
+                    {
+                        tex = enemyTex;
+                        points = 1;
+                    }   
+
+                    enemyArray[i, j] = new Enemy(tex, x, y, points);
                 }
             }
 
@@ -96,6 +122,8 @@ namespace Space_Invaders
             //========== Title ==========
             titleTex = Content.Load<Texture2D>("titlenew");
             titlePos = new Vector2(250, 0);
+           
+
 
             //========== Bullet ==========
             bulletTex = Content.Load<Texture2D>("bullet_1");
@@ -116,6 +144,9 @@ namespace Space_Invaders
                 Exit();
 
             player.Update(Window.ClientBounds.Width);
+
+            //========== Enemy ==========
+            // Movement logic
 
             bool hitWall = false;
 
@@ -141,7 +172,7 @@ namespace Space_Invaders
             }
 
 
-            //========== Enemy ==========
+           
             // Collision logic
             foreach (Enemy ene in enemyArray)
             {
@@ -154,7 +185,7 @@ namespace Space_Invaders
                         b.bulletUsed = true;
                         itemToRemove.Add(ene.enemyHitBox);
                         itemToRemove.Add(ene.enemyRec);
-                        score += 1;
+                        score += ene.pointValue;
 
                     }
 
@@ -238,6 +269,8 @@ namespace Space_Invaders
 
             //========== Bullet ==========
             _spriteBatch.Begin();
+
+
             foreach (Bullet b in bulletList)
             {
                 if (b.bulletUsed == false)
@@ -254,6 +287,7 @@ namespace Space_Invaders
                     ene.Draw(_spriteBatch);
                 }
             }
+
 
             //========== Player ==========
             player.Draw(_spriteBatch);
@@ -272,7 +306,7 @@ namespace Space_Invaders
 
             //========== Score ==========
             Vector2 scorePos = new Vector2(550, 10);
-            if (score  > 0)
+            if (score > 0)
             {
                 _spriteBatch.DrawString(scoreSpriteFont, "Score: " + score, scorePos, Color.Black);
             }
@@ -281,6 +315,12 @@ namespace Space_Invaders
             _spriteBatch.End();
 
             base.Draw(gameTime);
+
+
         }
-    }
+
 }
+
+}
+
+
