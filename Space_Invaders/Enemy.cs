@@ -14,9 +14,9 @@ namespace Space_Invaders
         public Rectangle enemyHitBox;
 
 
-        public bool lifeLost = false;
+        public bool lostLife = false;
         public static int speed = 1;
-        public static int moveDown = 20;
+        public static int dropDown = 20;
 
         public Enemy(Texture2D enemyTex, int x, int y)
         {
@@ -60,9 +60,9 @@ namespace Space_Invaders
             }
         }
 
-            public void MoveDown()
+            public void DropDown()
             {
-                enemyPos.Y += moveDown;
+                enemyPos.Y += dropDown;
         }
 
 

@@ -55,11 +55,11 @@ namespace Space_Invaders
         GameState currentGameState;
 
         //========== Start ==========
-        public bool startButtonClicked = false;
+        public bool BeginButtonClicked = false;
         Texture2D startBackgroundTex;
         Rectangle startBackgroundRec;
 
-        Start startButton;
+        Start startGameButton;
         Vector2 startButtonPos;
 
         Texture2D startSpriteSheetTex;
@@ -184,7 +184,7 @@ namespace Space_Invaders
             bullet = new Bullet(bulletTex, playerPos);
             bulletList = new List<Bullet>();
             bulletList.Add(bullet);
-            bullet.bulletUsed = true;
+            bullet.bulletsShot = true;
 
             //========== Score ==========
             scoreSpriteFont = Content.Load<SpriteFont>("Score");
@@ -197,7 +197,7 @@ namespace Space_Invaders
 
                 Texture2D startButtonTex = Content.Load<Texture2D>("Startknapp");
                 startButtonPos = new Vector2(250, 400);
-                startButton = new Start(startButtonTex, (int)startButtonPos.X, (int)startButtonPos.Y);
+                startGameButton = new Start(startButtonTex, (int)startButtonPos.X, (int)startButtonPos.Y);
 
                 startSpriteSheetTex = Content.Load<Texture2D>("alien02_sprites");
                 startSpriteSheetPos = new Vector2(260, 260);
@@ -243,13 +243,13 @@ namespace Space_Invaders
             if (currentGameState == GameState.Starting)
             {
                 //========== Enemy ==========
-                    startButton.Clicked();
+                    startGameButton.Clicked();
 
-                    if (startButtonClicked == false)
+                    if (BeginButtonClicked == false)
                     {
                         timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
 
-                        if (startButton.startButtonClicked)
+                        if (startGameButton.startButtonClicked)
                         {
                             currentGameState = GameState.Playing;
                         }
@@ -327,7 +327,7 @@ namespace Space_Invaders
                         if (ene.enemyIsAlive == true && b.bulletHitBox.Intersects(ene.enemyHitBox))
                         {
                             ene.enemyIsAlive = false;
-                            b.bulletUsed = true;
+                            b.bulletsShot = true;
                             itemToRemove.Add(ene.enemyHitBox);
                             itemToRemove.Add(ene.enemyRec);
 
@@ -370,12 +370,12 @@ namespace Space_Invaders
                 {
                     if (b.bulletPos.Y < 0)
                     {
-                        b.bulletUsed = true;
+                        b.bulletsShot = true;
                     }
                     b.Update(player.pos1, gameTime);
                 }
                 // remove inactive bullets
-                bulletList.RemoveAll(b => b.bulletUsed == true);
+                bulletList.RemoveAll(b => b.bulletsShot == true);
 
                 if (Lives > 0)
                 {
@@ -402,13 +402,13 @@ namespace Space_Invaders
 
                 foreach (Enemy ene in enemyArray)
                 {
-                    if (ene.lifeLost == false && ene.enemyIsAlive == true && ene.enemyHitBox.Bottom >= screenHeight - 200)
+                    if (ene.lostLife == false && ene.enemyIsAlive == true && ene.enemyHitBox.Bottom >= screenHeight - 200)
                     {
                         if (Lives > 0)
                         {
                             Lives -= 1;
                             ene.enemyIsAlive = false;
-                            ene.lifeLost = true;
+                            ene.lostLife = true;
                             itemToRemove.Add(ene.enemyRec);
                             itemToRemove.Add(ene.enemyHitBox);
                         }
@@ -460,7 +460,7 @@ namespace Space_Invaders
 
             foreach (Bullet b in bulletList)
             {
-                if (b.bulletUsed == false)
+                if (b.bulletsShot == false)
                 {
                     b.Draw(_spriteBatch);
                 }
@@ -506,7 +506,7 @@ namespace Space_Invaders
             if ( currentGameState == GameState.Starting)
             {
              _spriteBatch.Draw(startBackgroundTex, startBackgroundRec, Color.White); // start background
-             startButton.Draw(_spriteBatch); // start button
+             startGameButton.Draw(_spriteBatch); // start button
              _spriteBatch.Draw(startSpriteSheetTex, startSpriteSheetPos, startSpriteSheetRec , Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0); // alien animation on start screen
 
             }
