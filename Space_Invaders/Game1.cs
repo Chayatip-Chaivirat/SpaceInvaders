@@ -19,6 +19,7 @@ namespace Space_Invaders
         Texture2D enemyTex;
         public bool enemyIsAlive = true;
         Vector2 enemyPos;
+        public int points;
 
         //========== Lives ==========
         Texture2D heartTex;
@@ -136,7 +137,6 @@ namespace Space_Invaders
                     int y = (int) enemyPos.Y + i * 100;
 
                     Texture2D tex;
-                    int points;
 
                     if (i == 0) // top
                     {
@@ -154,7 +154,7 @@ namespace Space_Invaders
                         points = 1;
                     }   
 
-                    enemyArray[i, j] = new Enemy(tex, x, y, points);
+                    enemyArray[i, j] = new Enemy(tex, x, y);
                 }
             }
 
@@ -327,7 +327,7 @@ namespace Space_Invaders
                             b.bulletUsed = true;
                             itemToRemove.Add(ene.enemyHitBox);
                             itemToRemove.Add(ene.enemyRec);
-                            score += 1;
+                            score += points;
 
                         }
 

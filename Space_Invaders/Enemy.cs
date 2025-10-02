@@ -12,14 +12,13 @@ namespace Space_Invaders
         public Rectangle enemyRec;
         public bool enemyIsAlive = true;
         public Rectangle enemyHitBox;
-        public int pointValue;
 
 
         public bool lifeLost = false;
         public static int speed = 1;
         public static int moveDown = 20;
 
-        public Enemy(Texture2D enemyTex, int x, int y, int points)
+        public Enemy(Texture2D enemyTex, int x, int y)
         {
             this.enemyTex = enemyTex;
             this.enemyPos = new Vector2(x, y);
@@ -27,7 +26,6 @@ namespace Space_Invaders
             enemyRec = new Rectangle(0, 0, 100, 90);
             this.enemyIsAlive = true;
             enemyHitBox = new Rectangle(x, y, 100, 90);
-            this.pointValue = points;
      
 
             
