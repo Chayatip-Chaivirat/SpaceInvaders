@@ -22,7 +22,7 @@ namespace Space_Invaders
             this.bulletUsed = false;
         }
 
-        public void Update(Vector2 playerPos, GameTime gameTime) // behöver player position för att skjuta från rätt ställe
+        public void Update(Vector2 playerPos, GameTime gameTime) // Player position to set the bullet position when fired
         {
             if (bulletUsed == false)
             {

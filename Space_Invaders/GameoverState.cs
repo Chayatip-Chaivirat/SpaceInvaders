@@ -2,9 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using static Space_Invaders.Game1;
 
 namespace Space_Invaders
 {
@@ -51,44 +48,6 @@ namespace Space_Invaders
                 {
                     currentFrame.Y = 0;
                 }
-
-                Console.WriteLine(currentFrame);
-
-                //if (timeSinceLastFrame > millisecondPerFrame)
-                //{
-                //    timeSinceLastFrame -= millisecondPerFrame;
-
-                //    // animation for sprites on gameover screen
-                //    ++currentFrame.X;
-                //    if (currentFrame.X >= sheetSize.X)
-                //    {
-                //        currentFrame.X = 0;
-                //        ++currentFrame.Y;
-                //        if (currentFrame.Y >= sheetSize.Y)
-                //        {
-                //            currentFrame.Y = 0;
-                //        }
-                //    }
-                //    gameoverRec = new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y);
-                //}
-
-                //if (timeSinceLastFrame > millisecondPerFrame)
-                //{
-                //    currentFrame.X++;
-                //    if (currentFrame.X >= sheetSize.X)
-                //    {
-                //        currentFrame.X = 0;
-                //        currentFrame.Y++;
-                //        if (currentFrame.Y >= sheetSize.Y)
-                //        {
-                //            currentFrame.Y = 0;
-                //        }
-                //    }
-                //}
-
-                // Reset the timer
-                //
-                // timeSinceLastFrame -= millisecondPerFrame;
             }
             gameoverRec = new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y);
         }

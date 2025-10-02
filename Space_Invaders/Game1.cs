@@ -2,9 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using System.Linq;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Taskbar;
-using System.Runtime.Intrinsics;
 
 namespace Space_Invaders
 {
@@ -16,14 +13,13 @@ namespace Space_Invaders
 
         //========== Enemy ==========
         Enemy[,] enemyArray;
-        Texture2D enemyTex;
         public bool enemyIsAlive = true;
         Vector2 enemyPos;
         public int points;
 
-        Texture2D alientopTex;
-        Texture2D alienmidTex;
-        Texture2D alienbottomTex;
+        Texture2D topEnemyTex;
+        Texture2D midEnemyTex;
+        Texture2D bottomEnemyTex;
 
         //========== Lives ==========
         Texture2D heartTex;
@@ -32,8 +28,6 @@ namespace Space_Invaders
         //========== Title ==========
         Texture2D titleTex;
         Vector2 titlePos;
-       
-
 
         //========== Score ==========
         int score = 0;
@@ -125,11 +119,9 @@ namespace Space_Invaders
 
             //========== Enemy ==========
             enemyPos = new Vector2(65, 100);
-            enemyTex = Content.Load<Texture2D>("alien02_sprites");
-
-            alientopTex = Content.Load<Texture2D>("alien03_sprites");
-            alienmidTex = Content.Load<Texture2D>("alien01_sprites");
-            //alienbottomTex = Content.Load<Texture2D>("orangemonster");
+            topEnemyTex = Content.Load<Texture2D>("alien03_sprites");
+            midEnemyTex = Content.Load<Texture2D>("alien01_sprites");
+            bottomEnemyTex = Content.Load<Texture2D>("alien02_sprites");
 
             enemyArray = new Enemy[5, 5];
 
@@ -144,18 +136,15 @@ namespace Space_Invaders
 
                     if (i == 0) // top
                     {
-                        tex = alientopTex;
-                        points = 5;
+                        tex = topEnemyTex;
                     }
                     else if (i == 1 || i == 2) // mid
                     {
-                        tex = alienmidTex;
-                        points = 3;
+                        tex = midEnemyTex;
                     }
                     else // bottom
                     {
-                        tex = enemyTex;
-                        points = 1;
+                        tex = bottomEnemyTex;
                     }   
 
                     enemyArray[i, j] = new Enemy(tex, x, y);
@@ -177,8 +166,6 @@ namespace Space_Invaders
             titleTex = Content.Load<Texture2D>("titlenew");
             titlePos = new Vector2(250, 0);
            
-
-
             //========== Bullet ==========
             bulletTex = Content.Load<Texture2D>("bullet_1");
             bullet = new Bullet(bulletTex, playerPos);
@@ -190,20 +177,16 @@ namespace Space_Invaders
             scoreSpriteFont = Content.Load<SpriteFont>("Score");
 
             //========== Start ==========
-            if (currentGameState == GameState.Starting)
-            {
-                startBackgroundTex = Content.Load<Texture2D>("Arkadkabinett-1");
-                startBackgroundRec = new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height);
+            startBackgroundTex = Content.Load<Texture2D>("Arkadkabinett-1");
+            startBackgroundRec = new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height);
 
-                Texture2D startButtonTex = Content.Load<Texture2D>("Startknapp");
-                startButtonPos = new Vector2(250, 400);
-                startButton = new Start(startButtonTex, (int)startButtonPos.X, (int)startButtonPos.Y);
+            Texture2D startButtonTex = Content.Load<Texture2D>("Startknapp");
+            startButtonPos = new Vector2(250, 400);
+            startButton = new Start(startButtonTex, (int)startButtonPos.X, (int)startButtonPos.Y);
 
-                startSpriteSheetTex = Content.Load<Texture2D>("alien02_sprites");
-                startSpriteSheetPos = new Vector2(260, 260);
-                startSpriteSheetRec = new Rectangle(0, 0, 100, 90);
-
-            }
+            startSpriteSheetTex = Content.Load<Texture2D>("alien02_sprites");
+            startSpriteSheetPos = new Vector2(260, 260);
+            startSpriteSheetRec = new Rectangle(0, 0, 100, 90);
 
             //========== Gameover ==========
             gameOverTex = Content.Load<Texture2D>("game_over-2");
@@ -235,22 +218,22 @@ namespace Space_Invaders
         {
             //========== GameState ==========
 
+
             //==============================
             //          Start Screen
             //==============================
 
-
             if (currentGameState == GameState.Starting)
             {
                 //========== Enemy ==========
-                    startButton.Clicked();
+                    startButton.Clicked(); // check if start button is clicked
 
-                    if (startButtonClicked == false)
+                if (startButtonClicked == false)
                     {
                         timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
 
-                        if (startButton.startButtonClicked)
-                        {
+                        if (startButton.startButtonClicked) // switch to main game when start button is clicked
+                    {
                             currentGameState = GameState.Playing;
                         }
 
@@ -276,6 +259,7 @@ namespace Space_Invaders
                     }
                 }
 
+
             //==============================
             //          Main Game
             //==============================
@@ -284,22 +268,22 @@ namespace Space_Invaders
             {
                 //========== Enemy ==========
                 // Update enemies
-                bool hitWall = false;
+                bool hitStopX = false;
 
                 foreach (Enemy ene in enemyArray)
                 {
                     if (ene.enemyIsAlive)
                     {
-                        ene.Update();
+                        ene.Update(); // Move enemies and its hitbox
 
                         if (ene.enemyPos.X <= 0 || ene.enemyPos.X >= Window.ClientBounds.Width - ene.enemyRec.Width)
                         {
-                            hitWall = true;
+                            hitStopX = true;
                         }
                     }
                 }
 
-                if (hitWall)
+                if (hitStopX)
                 {
                     Enemy.speed *= -1;
                     foreach (Enemy ene in enemyArray)
@@ -308,6 +292,8 @@ namespace Space_Invaders
                     }
                 }
 
+                // Check if all enemies are dead
+                // use a boolean flag to track and if live <=0, switch to game over state
                 bool noEnemyLeftInArray = true;
                 foreach (Enemy ene in enemyArray)
                 {
@@ -321,7 +307,6 @@ namespace Space_Invaders
                 // Collision logic
                 foreach (Enemy ene in enemyArray)
                 {
-
                     foreach (Bullet b in bulletList)
                     {
                         if (ene.enemyIsAlive == true && b.bulletHitBox.Intersects(ene.enemyHitBox))
@@ -332,19 +317,19 @@ namespace Space_Invaders
                             itemToRemove.Add(ene.enemyRec);
 
                             // Different points for different enemies
-                            if (ene.enemyTex == alientopTex)
+                            if (ene.enemyTex == topEnemyTex)
                             {
                                 points = 5;
                                 score += points;
                             }
 
-                            if (ene.enemyTex == alienmidTex)
+                            if (ene.enemyTex == midEnemyTex)
                             {
                                 points = 3;
                                 score += points;
                             }
 
-                            if (ene.enemyTex == enemyTex)
+                            if (ene.enemyTex == bottomEnemyTex)
                             {
                                 points = 1;
                                 score += points;
@@ -354,14 +339,6 @@ namespace Space_Invaders
 
                     }
 
-                }
-
-                foreach (Enemy ene in enemyArray)
-                {
-                    if (ene.enemyIsAlive == false)
-                    {
-                        itemToRemove.Add(ene.enemyRec);
-                    }
                 }
 
                 //========== Bullet ==========
@@ -374,6 +351,7 @@ namespace Space_Invaders
                     }
                     b.Update(player.pos1, gameTime);
                 }
+
                 // remove inactive bullets
                 bulletList.RemoveAll(b => b.bulletUsed == true);
 
@@ -390,15 +368,14 @@ namespace Space_Invaders
                         {
                             bulletList.Add(new Bullet(bulletTex, player.pos1));
                         }
-
                     }
                 }
 
                 //========== Lives ==========
 
-                // lose one life when enemy reaches bottom
+                // lose one life per enemy reaches bottom
                 int screenHeight = Window.ClientBounds.Height;
-                int stopY = screenHeight - enemyTex.Height;
+                int stopY = screenHeight - bottomEnemyTex.Height;
 
                 foreach (Enemy ene in enemyArray)
                 {
@@ -431,24 +408,15 @@ namespace Space_Invaders
                 //==============================
 
                 if (currentGameState == GameState.GameOver)
-            {
-                gameOverSpriteStar.Update(gameTime);
-                gameOverSpriteExplosion.Update(gameTime);
-                gameOverSpriteExplosion2.Update(gameTime);
-                gameOverSpriteExplosion3.Update(gameTime);
-                gameOverSpriteStar2.Update(gameTime);
-
-                // switch to start screen when pressing Enter or Space
-                KeyboardState state = Keyboard.GetState();
-                if (previousKeyBoardState.IsKeyUp(Keys.Enter) && previousKeyBoardState.IsKeyDown(Keys.Enter) || previousKeyBoardState.IsKeyUp(Keys.Space) && previousKeyBoardState.IsKeyDown(Keys.Space)) // not working
                 {
-                    Lives = 5;
-                    LoadContent();
-                    currentGameState = GameState.Starting;
+                    // Animate sprites on game over screen
+                    gameOverSpriteStar.Update(gameTime);
+                    gameOverSpriteExplosion.Update(gameTime);
+                    gameOverSpriteExplosion2.Update(gameTime);
+                    gameOverSpriteExplosion3.Update(gameTime);
+                    gameOverSpriteStar2.Update(gameTime);
                 }
-            }
         }
-
 
         protected override void Draw(GameTime gameTime)
         {
@@ -480,7 +448,7 @@ namespace Space_Invaders
             player.Draw(_spriteBatch);
 
             //========== Lives ==========
-            for (int i = 0; i < Lives; i++)
+            for (int i = 0; i < Lives; i++) // draw hearts based on lives left
             {
                 int scale = 4;
                 int w = heartTex.Width / scale;
@@ -523,15 +491,11 @@ namespace Space_Invaders
                 gameOverSpriteExplosion2.Draw(_spriteBatch);
             }
 
-
             _spriteBatch.End();
 
             base.Draw(gameTime);
-
-
         }
-
-}
+    }
 
 }
 

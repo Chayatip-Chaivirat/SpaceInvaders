@@ -13,7 +13,6 @@ namespace Space_Invaders
         public bool enemyIsAlive = true;
         public Rectangle enemyHitBox;
 
-
         public bool lifeLost = false;
         public static int speed = 1;
         public static int moveDown = 20;
@@ -31,61 +30,25 @@ namespace Space_Invaders
             
         }
 
-
-
         public void Update()
         {
             if (enemyIsAlive == true)
             {
+                // Update hitbox position
                 enemyHitBox.X = (int)enemyPos.X;
                 enemyHitBox.Y = (int)enemyPos.Y;
                 enemyHitBox.Width = enemyRec.Width;
                 enemyHitBox.Height = enemyRec.Height;
 
-                // Go down to player 
-                //int stopY = 800 - enemyTex.Height;
-                //if ((int)enemyPos.Y < stopY)
-                //{
-                //    //enemyPos.Y += 1;
-                //}
-
+                // Move enemy
                 enemyPos.X += speed;
-
-                //if (enemyPos.X <= 0 || enemyPos.X >= 950 - enemyTex.Width)
-                //{
-                //    speed *= -1;
-
-                //}
-
             }
         }
 
-            public void MoveDown()
-            {
-                enemyPos.Y += moveDown;
+        public void MoveDown()
+        {
+            enemyPos.Y += moveDown;
         }
-
-
-
-            //bool movingRight = true;
-
-            //int stopY = 750 - enemyTex.Height;
-            //int stopX = 950 - enemyTex.Width;
-
-            //enemyPos.X += speed;
-
-            //if ((int)enemyPos.X > stopX)
-            //{
-            //    speed = -1;
-            //}
-            //if ((int)enemyPos.X < 0)
-            //    speed = 1;
-
-            //{
-            //    enemyPos.Y += 1;
-            //}
-
-        
 
         public void Draw(SpriteBatch sb)
         {
